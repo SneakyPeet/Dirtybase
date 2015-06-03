@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Dirtybase.Console", "src\Dirtybase.Console\Dirtybase.Console.fsproj", "{4D3853E6-6335-4D3E-B4A6-2AF10819B80E}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Dirtybase.Tests", "src\Dirtybase.Tests\Dirtybase.Tests.fsproj", "{52D81FB7-82B5-457C-BD19-6CB9B6B41EBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D3853E6-6335-4D3E-B4A6-2AF10819B80E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D3853E6-6335-4D3E-B4A6-2AF10819B80E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D3853E6-6335-4D3E-B4A6-2AF10819B80E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D3853E6-6335-4D3E-B4A6-2AF10819B80E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52D81FB7-82B5-457C-BD19-6CB9B6B41EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52D81FB7-82B5-457C-BD19-6CB9B6B41EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52D81FB7-82B5-457C-BD19-6CB9B6B41EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52D81FB7-82B5-457C-BD19-6CB9B6B41EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
