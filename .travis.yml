@@ -2,7 +2,7 @@ language: csharp
 solution: Dirtybase.sln
 install:
   - nuget restore Dirtybase.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+  - nuget install NUnit.Runners -Version 2.6.3 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release Dirtybase.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./src/Dirtybase.Tests/bin/Release/Dirtybase.Tests.dll
+  - mono ./testrunner/NUnit.Runners.2.6.3/tools/nunit-console.exe ./src/Dirtybase.Tests/bin/Release/Dirtybase.Tests.dll
