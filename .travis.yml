@@ -1,4 +1,4 @@
-language: fsharp
+language: csharp
 solution: Dirtybase.sln
 install:
   - nuget restore Dirtybase.sln
