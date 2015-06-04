@@ -6,8 +6,10 @@ module Options =
 
     type T = {
         command: CommandType;
-        dbName: string; 
     }
+
+    let private defaultOptions =
+        {command = Help}
 
     let rec private parse' optionsSoFar args=
         match args with
@@ -21,9 +23,8 @@ module Options =
                 parse' {optionsSoFar with command=Migrate} xss
             | _ -> {optionsSoFar with command=Unknown}
         | _ -> optionsSoFar
-    
+
     let parse (args:string) =
-        let defaultOptions = {command = Help; dbName = ""}
         args.Split(' ')
         |> Array.toList
         |> parse' defaultOptions
