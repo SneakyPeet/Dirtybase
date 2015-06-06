@@ -13,8 +13,9 @@ build:
   publish_nuget: false             # package projects with .nuspec files and push to artifacts
   publish_nuget_symbols: false     # generate and publish NuGet symbol packages
   include_nuget_references: false
+  verbosity: detailed
   
 before_build:
   nuget restore
   
-verbosity: detailed
+
