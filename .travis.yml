@@ -6,5 +6,5 @@ install:
 script:
   - xbuild /p:Configuration=Release Dirtybase.sln
   - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./src/Dirtybase.Tests/bin/Release/Dirtybase.Tests.dll
-notifications:
+notifications: 
   slack: koornhof:wpjDJ685XaYSKSSu3pfHvDDQ
