@@ -11,7 +11,7 @@ module Options =
     let private defaultOptions =
         {command = Help}
 
-    let rec private parse' optionsSoFar args=
+    let rec private parse' optionsSoFar args =
         match args with
         | [] ->
             optionsSoFar
