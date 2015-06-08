@@ -1,4 +1,6 @@
-﻿open NUnit.Framework
+﻿namespace tests
+
+open NUnit.Framework
 open Dirtybase
 
 [<TestFixture>]
