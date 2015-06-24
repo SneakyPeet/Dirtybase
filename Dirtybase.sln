@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dirtybase.App", "src\Dirtybase.App\Dirtybase.App.csproj", "{F9F99FE5-3D88-46C6-8F8F-8A5136C1B69F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dirtybase.Tests", "src\Dirtybase.Tests\Dirtybase.Tests.csproj", "{769C6262-D1C0-49AC-BBF6-B29A317B3588}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{F9F99FE5-3D88-46C6-8F8F-8A5136C1B69F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9F99FE5-3D88-46C6-8F8F-8A5136C1B69F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9F99FE5-3D88-46C6-8F8F-8A5136C1B69F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{769C6262-D1C0-49AC-BBF6-B29A317B3588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{769C6262-D1C0-49AC-BBF6-B29A317B3588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{769C6262-D1C0-49AC-BBF6-B29A317B3588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{769C6262-D1C0-49AC-BBF6-B29A317B3588}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
