@@ -1,6 +1,6 @@
 # Dirtybase
 
-[![Build Status](https://travis-ci.org/SneakyPeet/Dirtybase.svg)](https://travis-ci.org/SneakyPeet/Dirtybase)
+[![Build status](https://ci.appveyor.com/api/projects/status/c0h9y0pn0rumkj0v?svg=true)](https://ci.appveyor.com/project/Pieter/dirtybase)
 
-Database version/migration tool writen in f#
+Database version/migration tool
 
