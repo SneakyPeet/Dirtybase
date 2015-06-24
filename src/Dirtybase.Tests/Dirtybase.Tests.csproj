@@ -49,12 +49,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unit\CommandlineParsingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Unit\" />
+    <ProjectReference Include="..\Dirtybase.App\Dirtybase.App.csproj">
+      <Project>{F9F99FE5-3D88-46C6-8F8F-8A5136C1B69F}</Project>
+      <Name>Dirtybase.App</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
