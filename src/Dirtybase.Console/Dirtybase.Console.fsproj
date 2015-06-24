@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Options.fs" />
     <Compile Include="VersionComparison.fs" />
+    <Compile Include="Versioning.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
   </ItemGroup>

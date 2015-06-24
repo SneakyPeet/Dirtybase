@@ -17,6 +17,6 @@ module VersionComparison =
         |> Array.toList
         |> List.map getVersionFromFileName
 
-
+    //Assumes Duplicates Have Been Removed
     let extractVersionsToApply versions existingVersions =
         (Set.ofList versions) - (Set.ofList existingVersions) //this is awesome -> It gets all items not in both lists

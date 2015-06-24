@@ -28,4 +28,3 @@ module Options =
         args.Split(' ')
         |> Array.toList
         |> parse' defaultOptions
-
