@@ -10,9 +10,11 @@ namespace Dirtybase.Tests.Unit
     {
         private static readonly object[] positiveTestCases =
             {
-                new object[] { "init", new DirtyOptions(DirtyCommand.Init) },
-                new object[] { "migrate", new DirtyOptions(DirtyCommand.Migrate) },
-                new object[] { "help", new DirtyOptions(DirtyCommand.Help) }
+                new object[] { "init -db sql", new DirtyOptions(DirtyCommand.Init, DatabaseType.Sql) },
+                new object[] { "init -db sqlite", new DirtyOptions(DirtyCommand.Init, DatabaseType.Sqlite) },
+                new object[] { "migrate -db sql", new DirtyOptions(DirtyCommand.Migrate, DatabaseType.Sql) },
+                new object[] { "migrate -db sqlite", new DirtyOptions(DirtyCommand.Migrate, DatabaseType.Sqlite) },
+                new object[] { "help", new DirtyOptions(DirtyCommand.Help, null) }
             };
 
         [Test]
@@ -27,7 +29,13 @@ namespace Dirtybase.Tests.Unit
         private static readonly object[] negativeTestCases =
             {
                 new object[] { "", typeof(ArgumentException), "use 'help' option for help" },
-                new object[] { "foo", typeof(ArgumentException), "foo is not an option. use 'help' option for help" }
+                new object[] { "foo", typeof(ArgumentException), "foo is not an option. use 'help' option for help" },
+                new object[] { "init", typeof(ArgumentException), "Database Type Required. use 'help' option for help" },
+                new object[] { "init -db", typeof(ArgumentException), "Database Type Required. use 'help' option for help" },
+                new object[] { "init -db foo", typeof(ArgumentException), "foo is not a supported Database. use 'help' option for help" },
+                new object[] { "migrate", typeof(ArgumentException), "Database Type Required. use 'help' option for help" },
+                new object[] { "migrate -db", typeof(ArgumentException), "Database Type Required. use 'help' option for help" },
+                new object[] { "migrate -db foo", typeof(ArgumentException), "foo is not a supported Database. use 'help' option for help" },
             };
 
         [Test]

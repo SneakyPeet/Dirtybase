@@ -1,25 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dirtybase.App.Options.Validators;
 
 namespace Dirtybase.App
 {
     public class DirtyOptions
     {
         public DirtyCommand Command { get; private set; }
+        public DatabaseType? Database { get; private set; }
 
-        public DirtyOptions(DirtyCommand command)
+        public DirtyOptions(DirtyCommand command, DatabaseType? dbType)
         {
             this.Command = command;
+            this.Database = dbType;
         }
 
         public DirtyOptions(string[] args)
         {
             if(args == null || args.Length == 0)
             {
-                throw new ArgumentException("use 'help' option for help");
+                throw new ArgumentException(Constants.HelpMessage);
             }
             this.ParseArguments(args);
+            this.ValidateOptions();
         }
 
         private void ParseArguments(string[] args)
@@ -40,17 +44,46 @@ namespace Dirtybase.App
                 case "help":
                     this.SetCommand(args, DirtyCommand.Help);
                     break;
+                case "-db":
+                    this.SetDatabase(args);
+                    break;
                 case "":
-                    throw new ArgumentException("use 'help' option for help");
+                    throw new ArgumentException(Constants.HelpMessage);
                 default:
-                    throw new ArgumentException(option + " is not an option. use 'help' option for help");
+                    throw new ArgumentException(option + Constants.NotAnOption);
             }
+        }
+
+        private void SetDatabase(string[] args)
+        {
+            if(args.Length < 2)
+            {
+                throw new ArgumentException(Constants.DatabaseTypeRequired);
+            }
+            var db = args[1];
+            switch(db)
+            {
+                case "sql":
+                    this.Database = DatabaseType.Sql;
+                    break;
+                case "sqlite":
+                    this.Database = DatabaseType.Sqlite;
+                    break;
+                default:
+                    throw new ArgumentException(db + Constants.DatabaseNotSupported);
+            }
+            ParseArguments(args.Skip(2).ToArray());
         }
 
         private void SetCommand(IEnumerable<string> args, DirtyCommand command)
         {
             this.Command = command;
             this.ParseArguments(args.Skip(1).ToArray());
+        }
+
+        private void ValidateOptions()
+        {
+            this.Validate(this.Command.Name()).ThrowIfErrors();
         }
 
         public override bool Equals(object obj)
