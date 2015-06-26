@@ -6,12 +6,17 @@ namespace Dirtybase.App.Options.Validators
     {
         public static Errors Validate(this DirtyOptions options, string validatorName)
         {
+            var validator = ResolveValidator(validatorName);
+            return validator.Errors(options);
+        }
+
+        private static IOptionsValidator ResolveValidator(string validatorName)
+        {
             var baseType = typeof(IOptionsValidator);
             var className = string.Format("{0}.{1}{2}", baseType.Namespace, validatorName, Constants.OptionsValidatorConvention);
             var validatorType = baseType.Assembly.GetType(className, true);
             var validator = (IOptionsValidator)Activator.CreateInstance(validatorType);
-            var errors = validator.Errors(options);
-            return errors;
+            return validator;
         }
 
         public static string Name(this Enum input)

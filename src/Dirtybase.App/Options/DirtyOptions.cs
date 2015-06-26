@@ -9,43 +9,47 @@ namespace Dirtybase.App
     {
         public DirtyCommand Command { get; private set; }
         public DatabaseType? Database { get; private set; }
+        public string ConnectionString { get; private set; }
 
-        public DirtyOptions(DirtyCommand command, DatabaseType? dbType)
+        public DirtyOptions(DirtyCommand command, DatabaseType? dbType, string connectionString)
         {
             this.Command = command;
             this.Database = dbType;
+            this.ConnectionString = connectionString;
         }
 
-        public DirtyOptions(string[] args)
+        public DirtyOptions(string[] input)
         {
-            if(args == null || args.Length == 0)
-            {
-                throw new ArgumentException(Constants.HelpMessage);
-            }
+            var args = ResplitArguments(input);
             this.ParseArguments(args);
             this.ValidateOptions();
         }
 
+        private static string[] ResplitArguments(string[] input)
+        {
+            var argsAsString = String.Join(" ", input);
+            var sepperators = new[] { " -" };
+            var args = argsAsString.Split(sepperators, StringSplitOptions.None);
+            if(args == null || args.Length == 0)
+            {
+                throw new ArgumentException(Constants.HelpMessage);
+            }
+            return args;
+        }
+
         private void ParseArguments(string[] args)
         {
-            if(args.Length == 0)
-            {
-                return;
-            }
             var option = args[0];
             switch(option)
             {
                 case "init": 
-                    this.SetCommand(args,DirtyCommand.Init);
+                    this.ParseCommand(args,DirtyCommand.Init);
                     break;
                 case "migrate":
-                    this.SetCommand(args, DirtyCommand.Migrate);
+                    this.ParseCommand(args, DirtyCommand.Migrate);
                     break;
                 case "help":
-                    this.SetCommand(args, DirtyCommand.Help);
-                    break;
-                case "-db":
-                    this.SetDatabase(args);
+                    this.ParseCommand(args, DirtyCommand.Help);
                     break;
                 case "":
                     throw new ArgumentException(Constants.HelpMessage);
@@ -54,14 +58,44 @@ namespace Dirtybase.App
             }
         }
 
+        private void ParseCommand(string[] args, DirtyCommand command)
+        {
+            this.Command = command;
+            this.ParseNextOption(args);
+        }
+
+        private void ParseNextOption(IEnumerable<string> args)
+        {
+            this.ParseOptions(args.Skip(1).ToArray());
+        }
+
+        private void ParseOptions(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                return;
+            }
+            var option = args[0].Substring(0, 2);
+            switch(option)
+            {
+                case "db":
+                    this.SetDatabase(args);
+                    break;
+                case "cs":
+                    this.SetConnectionString(args);
+                    break;
+                case "":
+                    throw new ArgumentException(Constants.HelpMessage);
+                default:
+                    throw new ArgumentException(option + Constants.NotAnOption);
+            }
+            this.ParseNextOption(args);
+        }
+
         private void SetDatabase(string[] args)
         {
-            if(args.Length < 2)
-            {
-                throw new ArgumentException(Constants.DatabaseTypeRequired);
-            }
-            var db = args[1];
-            switch(db)
+            var db = GetSuppliedOption(args);
+            switch (db)
             {
                 case "sql":
                     this.Database = DatabaseType.Sql;
@@ -69,16 +103,26 @@ namespace Dirtybase.App
                 case "sqlite":
                     this.Database = DatabaseType.Sqlite;
                     break;
+                case "":
+                    throw new ArgumentException(Constants.DatabaseTypeRequired);
                 default:
                     throw new ArgumentException(db + Constants.DatabaseNotSupported);
             }
-            ParseArguments(args.Skip(2).ToArray());
         }
 
-        private void SetCommand(IEnumerable<string> args, DirtyCommand command)
+        private void SetConnectionString(string[] args)
         {
-            this.Command = command;
-            this.ParseArguments(args.Skip(1).ToArray());
+            this.ConnectionString = GetSuppliedOption(args);
+        }
+
+        private static string GetSuppliedOption(string[] args)
+        {
+            var option = args[0];
+            if(option.Length > 2)
+            {
+                return args[0].Substring(3);
+            }
+            return string.Empty;
         }
 
         private void ValidateOptions()
@@ -97,12 +141,16 @@ namespace Dirtybase.App
 
         protected bool Equals(DirtyOptions other)
         {
-            return this.Command == other.Command;
+            return this.Command == other.Command
+                && this.Database == other.Database
+                && this.ConnectionString == other.ConnectionString;
         }
 
         public override int GetHashCode()
         {
-            return (int)this.Command;
+            return (int)this.Command
+                + (this.Database.HasValue ? (int)this.Database.Value : 0)
+                + this.ConnectionString.GetHashCode();
         }
 
         public static bool operator ==(DirtyOptions left, DirtyOptions right)
