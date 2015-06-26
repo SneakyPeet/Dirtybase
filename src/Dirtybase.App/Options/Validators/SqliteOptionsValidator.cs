@@ -1,10 +1,12 @@
+using System.Data.SQLite;
+
 namespace Dirtybase.App.Options.Validators
 {
-    class SqliteOptionsValidator : IOptionsValidator
+    class SqliteOptionsValidator : ConnectionStringValidator, IOptionsValidator
     {
         public Errors Errors(DirtyOptions options)
         {
-            return new Errors();
+            return ValidateConnectionString<SQLiteConnectionStringBuilder>(options);
         }
     }
 }
