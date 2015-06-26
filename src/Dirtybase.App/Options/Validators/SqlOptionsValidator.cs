@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace Dirtybase.App.Options.Validators
@@ -13,15 +14,15 @@ namespace Dirtybase.App.Options.Validators
             {
                 errors.Add(Constants.InvalidConnectionString);
             }
-            errors.AddRange(CheckConnectionString(options.ConnectionString));
+            errors.AddRange(CheckConnectionString<SqlConnectionStringBuilder>(options.ConnectionString));
             return errors;
         }
 
-        private static IEnumerable<string> CheckConnectionString(string conncetionString)
+        private static IEnumerable<string> CheckConnectionString<TBuilder>(string conncetionString) where TBuilder : DbConnectionStringBuilder
         {
             try
             {
-                new SqlConnectionStringBuilder(conncetionString);
+                Activator.CreateInstance(typeof(TBuilder), conncetionString);
             }
             catch(Exception)
             {
