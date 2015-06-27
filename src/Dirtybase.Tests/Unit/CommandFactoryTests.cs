@@ -23,6 +23,7 @@ namespace Dirtybase.Tests.Unit
             commandFactory = new CommandFactory();
         }
 
+        //todo dynamically generate cases
         private static readonly object[] positiveTestCases =
             {
                 new object[] { MakeOptions(DirtyCommand.Help, null), typeof(HelpCommand)},

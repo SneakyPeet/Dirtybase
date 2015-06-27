@@ -4,6 +4,9 @@ namespace Dirtybase.App.Implementations.Sqlite
 {
     class SqliteInitCommand : IDirtyCommand
     {
-        
+        public void Execute(DirtyOptions options)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
