@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Dirtybase.App.Implementations.Help;
 
 namespace Dirtybase.App.Commands
@@ -11,7 +12,10 @@ namespace Dirtybase.App.Commands
             {
                 return new HelpCommand();
             }
-            throw new ArgumentException("Command Does Not Exist");
+            var types = this.GetType().Assembly.GetTypes();
+            var commandName = string.Format("{0}{1}{2}", options.Database, options.Command, Constants.CommandConvention);
+            var commandType = types.FirstOrDefault(t => t.Name == commandName);
+            return (IDirtyCommand)Activator.CreateInstance(commandType);
         }
     }
 }

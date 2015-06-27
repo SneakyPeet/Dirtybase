@@ -2,6 +2,8 @@
 using Dirtybase.App;
 using Dirtybase.App.Commands;
 using Dirtybase.App.Implementations.Help;
+using Dirtybase.App.Implementations.Sql;
+using Dirtybase.App.Implementations.Sqlite;
 using Dirtybase.App.Options;
 using NUnit.Framework;
 using SharpTestsEx;
@@ -24,8 +26,10 @@ namespace Dirtybase.Tests.Unit
         private static readonly object[] positiveTestCases =
             {
                 new object[] { MakeOptions(DirtyCommand.Help, null), typeof(HelpCommand)},
-                new object[] { MakeOptions(DirtyCommand.Init, DatabaseType.Sqlite), typeof(HelpCommand)},
-                new object[] { MakeOptions(DirtyCommand.Init, DatabaseType.Sql), typeof(HelpCommand)}
+                new object[] { MakeOptions(DirtyCommand.Init, DatabaseType.Sqlite), typeof(SqliteInitCommand)},
+                new object[] { MakeOptions(DirtyCommand.Migrate, DatabaseType.Sqlite), typeof(SqliteMigrateCommand)},
+                new object[] { MakeOptions(DirtyCommand.Init, DatabaseType.Sql), typeof(SqlInitCommand)},
+                new object[] { MakeOptions(DirtyCommand.Migrate, DatabaseType.Sql), typeof(SqlMigrateCommand)}
             };
 
         [Test]
