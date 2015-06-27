@@ -1,5 +1,6 @@
 ﻿using System;
 using Dirtybase.App;
+using Dirtybase.App.Options;
 using NUnit.Framework;
 using SharpTestsEx;
 

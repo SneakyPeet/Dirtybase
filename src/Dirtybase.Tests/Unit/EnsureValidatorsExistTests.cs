@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Dirtybase.App;
+using Dirtybase.App.Options;
 using Dirtybase.App.Options.Validators;
 using NUnit.Framework;
 
@@ -26,35 +27,26 @@ namespace Dirtybase.Tests.Unit
         private static void AssertValidatorsExistForEnum<T>()
         {
             var errors = new Errors();
-            var assembly = Assembly.GetAssembly(typeof(IOptionsValidator));
+            var optionsValidatorInterfaceType = typeof(IOptionsValidator);
+            var assembly = Assembly.GetAssembly(optionsValidatorInterfaceType);
             var types = assembly.GetTypes().ToList();
             foreach (T item in (T[])Enum.GetValues(typeof(T)))
             {
                 var className = item.ToString() + Constants.OptionsValidatorConvention;
-                if (types.All(t => t.Name != className))
+                var validatorType = types.FirstOrDefault(t => t.Name == className);
+                if (validatorType == null)
                 {
-                    errors.Add(item.ToString() + "OptionsValidator Not Implemented");
+                    errors.Add(string.Format("{0}{1} Not Implemented", item.ToString(), Constants.OptionsValidatorConvention));
+                }
+                else if (!optionsValidatorInterfaceType.IsAssignableFrom(validatorType))
+                {
+                    errors.Add(string.Format("{0} Does Not Implemented {1}", validatorType.Name, optionsValidatorInterfaceType.Name));
                 }
             }
-            errors.ThrowIfErrors();
+            if (errors.Any())
+            {
+                Assert.Fail(errors.Message);
+            }
         }
-
-        //private static void AssertValidatorsExistForEnum<T>()
-        //{
-        //    foreach(T item in (T[])Enum.GetValues(typeof(T)))
-        //    {
-        //        var baseType = typeof(IOptionsValidator);
-        //        var baseNameSpace = baseType.Namespace;
-        //        var className = baseNameSpace + "." + item.ToString() + Constants.OptionsValidatorConvention;
-        //        var assembly = Assembly.GetAssembly(typeof(IOptionsValidator));
-        //        Type resultType = assembly.GetType(className);
-        //        var errors = new Errors();
-        //        if(resultType == null)
-        //        {
-        //            errors.Add(item.ToString() + " OptionsValidator Not Implemented");
-        //        }
-        //        errors.ThrowIfErrors();
-        //    }
-        //}
     }
 }

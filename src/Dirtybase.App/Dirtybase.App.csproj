@@ -47,6 +47,7 @@
     <Compile Include="Commands\CommandFactory.cs" />
     <Compile Include="Implementations\Help\HelpCommand.cs" />
     <Compile Include="Commands\IDirtyCommand.cs" />
+    <Compile Include="Implementations\Sql\SqlInitCommand.cs" />
     <Compile Include="Options\DatabaseType.cs" />
     <Compile Include="Options\DirtyCommand.cs" />
     <Compile Include="Options\DirtyOptions.cs" />

@@ -9,5 +9,6 @@
         public const string InvalidConnectionString = "Invalid Connection String";
         
         public const string OptionsValidatorConvention = "OptionsValidator";
+        public static string CommandConvention = "Command";
     }
 }

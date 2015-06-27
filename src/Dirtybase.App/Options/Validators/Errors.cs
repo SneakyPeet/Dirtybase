@@ -10,7 +10,15 @@ namespace Dirtybase.App.Options.Validators
         {
             if (this.Any())
             {
-                throw new ArgumentException(string.Join("\n", this));
+                throw new ArgumentException(this.Message);
+            }
+        }
+
+        public string Message
+        {
+            get
+            {
+                return string.Join("\n", this);
             }
         }
     }
