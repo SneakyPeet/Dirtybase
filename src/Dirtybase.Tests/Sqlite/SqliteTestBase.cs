@@ -15,13 +15,13 @@ namespace Dirtybase.Tests.Sqlite
             "CREATE TABLE " + versionTableName + "(version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateApplied datetime)";
 
         [SetUp]
-        public void SetUp()
+        public virtual void SetUp()
         {
             this.MakeSqliteDatabase();
         }
 
         [TearDown]
-        public void TearDown()
+        public virtual void TearDown()
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -60,6 +60,24 @@ namespace Dirtybase.Tests.Sqlite
                         command.CommandText = query;
                         command.ExecuteNonQuery();
                     }
+                }
+                catch (Exception)
+                {
+                    connection.Close();
+                    throw;
+                }
+                connection.Close();
+            }
+        }
+
+        protected void AssertAgainstDatabase(Func<SQLiteConnection, bool> assert)
+        {
+            using (var connection = new SQLiteConnection(connectionstring))
+            {
+                connection.Open();
+                try
+                {
+                    assert(connection);
                 }
                 catch (Exception)
                 {

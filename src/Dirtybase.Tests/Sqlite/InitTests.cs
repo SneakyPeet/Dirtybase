@@ -17,7 +17,7 @@ namespace Dirtybase.Tests.Sqlite
         public void InitOnSqliteShouldAddDirtyBaseVersionTable()
         {
             Program.Main(arguments.Split(' '));
-            this.AssertDirtybaseTableExists();
+            AssertAgainstDatabase(DirtybaseVersionTableExists);
         }
 
         [Test]
@@ -35,29 +35,15 @@ namespace Dirtybase.Tests.Sqlite
             Program.Main(arguments.Split(' '));
         }
 
-        private void AssertDirtybaseTableExists()
+        private bool DirtybaseVersionTableExists(SQLiteConnection connection)
         {
-            bool hasTable;
-            using(var connection = new SQLiteConnection(connectionstring))
-            {
-                connection.Open();
-                const string query = "SELECT name FROM sqlite_master WHERE name ='"+ versionTableName + "';";
-                var command = new SQLiteCommand(query, connection);
-                try
-                {
+            const string query = "SELECT name FROM sqlite_master WHERE name ='" + versionTableName + "';";
+                    var command = new SQLiteCommand(query, connection);
                     using (var reader = command.ExecuteReader())
                     {
-                        hasTable = reader.HasRows;
+                        reader.HasRows.Should().Be.True();;
                     }
-                }
-                catch(Exception)
-                {
-                    connection.Close();
-                    throw;
-                }
-                connection.Close();
-            }
-            hasTable.Should().Be.True();
+            return true;
         }
     }
 }

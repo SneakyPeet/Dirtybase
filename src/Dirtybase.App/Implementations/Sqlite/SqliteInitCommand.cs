@@ -6,7 +6,7 @@ namespace Dirtybase.App.Implementations.Sqlite
 {
     class SqliteInitCommand : SqliteCommandBase, IDirtyCommand
     {
-        private const string createVersionTableQuery = "CREATE TABLE " + versionTableName + "(version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateApplied datetime)";
+        private const string createVersionTableQuery = "CREATE TABLE " + versionTableName + "(Version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateApplied datetime)";
         
         public void Execute(DirtyOptions options)
         {
