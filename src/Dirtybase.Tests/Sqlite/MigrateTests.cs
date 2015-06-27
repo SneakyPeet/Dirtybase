@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using Dirtybase.App;
 using Dirtybase.App.Implementations.Sqlite;
+using Dirtybase.App.Options.Validators;
 using NUnit.Framework;
 
 namespace Dirtybase.Tests.Sqlite
@@ -81,29 +83,33 @@ namespace Dirtybase.Tests.Sqlite
             AssertAgainstDatabase(DatabaseAtVersion3);
         }
 
-        private bool DatabaseAtVersion1(SQLiteConnection connection)
+        private Errors DatabaseAtVersion1(SQLiteConnection connection)
         {
-            AssertTable(true, connection, "Team");
-            HasV1Row(connection);
-            return true;
-        }
-        
-        private bool DatabaseAtVersion3(SQLiteConnection connection)
-        {
-            AssertTable(false, connection, "Team");
-            AssertTable(true, connection, "Employee");
-            HasV3Rows(connection);
-            return true;
+            var errors = new Errors();
+            errors.AddRange(AssertTable(true, connection, "Team"));
+            errors.AddRange(HasV1Row(connection));
+            return errors;
         }
 
-        private void HasV3Rows(SQLiteConnection connection)
+        private Errors DatabaseAtVersion3(SQLiteConnection connection)
         {
-            HasV1Row(connection);
-            HasV2Row(connection);
-            HasV3Row(connection);
+            var errors = new Errors();
+            errors.AddRange(AssertTable(false, connection, "Team"));
+            errors.AddRange(AssertTable(true, connection, "Employee"));
+            errors.AddRange(HasV3Rows(connection));
+            return errors;
         }
 
-        private void AssertTable(bool exists, SQLiteConnection connection, string tableName)
+        private IEnumerable<string> HasV3Rows(SQLiteConnection connection)
+        {
+            var errors = new Errors();
+            errors.AddRange(HasV1Row(connection));
+            errors.AddRange(HasV2Row(connection));
+            errors.AddRange(HasV3Row(connection));
+            return errors;
+        }
+
+        private IEnumerable<string> AssertTable(bool exists, SQLiteConnection connection, string tableName)
         {
             string query = string.Format("SELECT count(name) FROM sqlite_master where name = '{0}';", tableName);
             var command = new SQLiteCommand(query, connection);
@@ -111,30 +117,38 @@ namespace Dirtybase.Tests.Sqlite
 
             var expectedRowCount = exists ? 1 : 0;
             var text = exists ? "Created" : "Deleted";
-            Assert.IsTrue(rowCount == expectedRowCount, string.Format("{0} Table Should Be {1}", tableName, text));
+            if(rowCount == expectedRowCount)
+            {
+                return new Errors();
+            }
+            return new Errors{string.Format("{0} Table Should Be {1}", tableName, text)};
         }
 
-        private void HasV1Row(SQLiteConnection connection)
+        private IEnumerable<string> HasV1Row(SQLiteConnection connection)
         {
-            HasVersionRow(connection, "v1", v1);
+            return HasVersionRow(connection, "v1", v1);
         }
 
-        private void HasV2Row(SQLiteConnection connection)
+        private IEnumerable<string> HasV2Row(SQLiteConnection connection)
         {
-            HasVersionRow(connection, "v2", v2);
+            return HasVersionRow(connection, "v2", v2);
         }
 
-        private void HasV3Row(SQLiteConnection connection)
+        private IEnumerable<string> HasV3Row(SQLiteConnection connection)
         {
-            HasVersionRow(connection, "v3", v3);
+            return HasVersionRow(connection, "v3", v3);
         }
 
-        private static void HasVersionRow(SQLiteConnection connection, string version, string fileName)
+        private Errors HasVersionRow(SQLiteConnection connection, string version, string fileName)
         {
             var query = string.Format("SELECT count(Version) FROM {0} where Version = '{1}' AND FileName = '{2}';", versionTableName, version, fileName);
             var command = new SQLiteCommand(query, connection);
             var rowcount = Convert.ToInt32(command.ExecuteScalar());
-            Assert.IsTrue(rowcount == 1, string.Format("Version {0} Should Be Added To Version Table", version));
+            if (rowcount == 1)
+            {
+                return new Errors();
+            }
+            return new Errors { string.Format("Version {0} Should Be Added To Version Table", version) };
         }
 
         private void CopyFileToScriptFolder(string fileName)

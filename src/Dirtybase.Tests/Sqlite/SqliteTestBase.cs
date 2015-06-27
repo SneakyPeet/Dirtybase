@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
+using Dirtybase.App.Options.Validators;
 using NUnit.Framework;
 
 namespace Dirtybase.Tests.Sqlite
@@ -70,14 +72,18 @@ namespace Dirtybase.Tests.Sqlite
             }
         }
 
-        protected void AssertAgainstDatabase(Func<SQLiteConnection, bool> assert)
+        protected void AssertAgainstDatabase(Func<SQLiteConnection, Errors> validator)
         {
             using (var connection = new SQLiteConnection(connectionstring))
             {
                 connection.Open();
                 try
                 {
-                    assert(connection);
+                    var errors = validator(connection);
+                    if(errors.Any())
+                    {
+                        Assert.Fail(errors.Message);
+                    }
                 }
                 catch (Exception)
                 {

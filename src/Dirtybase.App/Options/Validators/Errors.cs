@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Dirtybase.App.Options.Validators
 {
-    internal class Errors: List<string>
+    public class Errors: List<string>
     {
         public void ThrowIfErrors()
         {
