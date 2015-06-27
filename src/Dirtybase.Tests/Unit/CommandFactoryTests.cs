@@ -12,7 +12,7 @@ using SharpTestsEx;
 namespace Dirtybase.Tests.Unit
 {
     [TestFixture]
-    [Category("Unit")]
+    [Category(TestTypes.Unit)]
     public class CommandFactoryTests
     {
         private CommandFactory commandFactory;

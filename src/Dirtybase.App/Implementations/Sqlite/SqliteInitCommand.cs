@@ -6,7 +6,6 @@ namespace Dirtybase.App.Implementations.Sqlite
     {
         public void Execute(DirtyOptions options)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

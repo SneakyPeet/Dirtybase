@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Dirtybase.Tests.Unit
 {
     [TestFixture]
-    [Category("Unit")]
+    [Category(TestTypes.Unit)]
     public class EnsureValidatorsExistTests
     {
         [Test]
