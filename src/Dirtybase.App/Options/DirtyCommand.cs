@@ -4,6 +4,6 @@
     {
         Init,
         Migrate,
-        Help
+        Help,
     }
 }

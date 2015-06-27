@@ -14,7 +14,7 @@ namespace Dirtybase.Tests.Unit
     public class EnsureCommandsExistTests
     {
         [Test]
-        public void EnsureCommandValidatorsAreImplemented()
+        public void EnsureCommandAreImplemented()
         {
             var errors = new Errors();
             foreach (DirtyCommand item in (DirtyCommand[])Enum.GetValues(typeof(DirtyCommand)))
@@ -39,11 +39,11 @@ namespace Dirtybase.Tests.Unit
             var types = assembly.GetTypes().ToList();
             foreach (DatabaseType item in (DatabaseType[])Enum.GetValues(typeof(DatabaseType)))
             {
-                var className = string.Format("{0}{1}{2}", item.ToString(), command.ToString(), Constants.CommandConvention);
+                var className = item.ToCommandConvetion(command);
                 var type = types.FirstOrDefault(t => t.Name == className);
                 if (type == null)
                 {
-                    errors.Add(string.Format("{0}{1} Not Implemented", item.ToString(), Constants.CommandConvention));
+                    errors.Add(string.Format("{0} Not Implemented", item.ToCommandConvetion(command)));
                 }
                 else if (!dirtyCommandInterfaceType.IsAssignableFrom(type))
                 {

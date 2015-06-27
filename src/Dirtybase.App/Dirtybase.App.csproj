@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandFactory.cs" />
+    <Compile Include="ConvetionExtensions.cs" />
     <Compile Include="Implementations\Help\HelpCommand.cs" />
     <Compile Include="Commands\IDirtyCommand.cs" />
     <Compile Include="Implementations\Sqlite\SqliteInitCommand.cs" />

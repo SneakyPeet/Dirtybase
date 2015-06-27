@@ -36,7 +36,7 @@ namespace Dirtybase.Tests.Unit
                 var validatorType = types.FirstOrDefault(t => t.Name == className);
                 if (validatorType == null)
                 {
-                    errors.Add(string.Format("{0}{1} Not Implemented", item.ToString(), Constants.OptionsValidatorConvention));
+                    errors.Add(string.Format("{0} Not Implemented", item.ToString().ToOptionsValidatorConvetion()));
                 }
                 else if (!optionsValidatorInterfaceType.IsAssignableFrom(validatorType))
                 {

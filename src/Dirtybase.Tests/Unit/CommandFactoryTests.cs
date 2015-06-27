@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Dirtybase.App;
 using Dirtybase.App.Commands;
 using Dirtybase.App.Implementations.Help;
-using Dirtybase.App.Implementations.Sql;
-using Dirtybase.App.Implementations.Sqlite;
 using Dirtybase.App.Options;
 using NUnit.Framework;
 using SharpTestsEx;
@@ -14,7 +15,6 @@ namespace Dirtybase.Tests.Unit
     [Category("Unit")]
     public class CommandFactoryTests
     {
-
         private CommandFactory commandFactory;
 
         [SetUp]
@@ -23,22 +23,43 @@ namespace Dirtybase.Tests.Unit
             commandFactory = new CommandFactory();
         }
 
-        //todo dynamically generate cases
-        private static readonly object[] positiveTestCases =
-            {
-                new object[] { MakeOptions(DirtyCommand.Help, null), typeof(HelpCommand)},
-                new object[] { MakeOptions(DirtyCommand.Init, DatabaseType.Sqlite), typeof(SqliteInitCommand)},
-                new object[] { MakeOptions(DirtyCommand.Migrate, DatabaseType.Sqlite), typeof(SqliteMigrateCommand)},
-                new object[] { MakeOptions(DirtyCommand.Init, DatabaseType.Sql), typeof(SqlInitCommand)},
-                new object[] { MakeOptions(DirtyCommand.Migrate, DatabaseType.Sql), typeof(SqlMigrateCommand)}
-            };
-
         [Test]
-        [TestCaseSource("positiveTestCases")]
+        [TestCaseSource(typeof(CommandFactoryTestSource), "TestCases")]
         public void GivenOptionsReturnCorrectCommandType(DirtyOptions options, Type expectedCommandType)
         {
             var command = this.commandFactory.Make(options);
             command.GetType().Should().Be.EqualTo(expectedCommandType);
+        }
+    }
+
+    public class CommandFactoryTestSource
+    {
+        public static IEnumerable TestCases
+        {
+            get
+            {
+                var testcases = new List<object>();
+                var types = typeof(IDirtyCommand).Assembly.GetTypes();
+                foreach (DirtyCommand command in (DirtyCommand[])Enum.GetValues(typeof(DirtyCommand)))
+                {
+                    if (command == DirtyCommand.Help)
+                    {
+                        testcases.Add(new object[] { MakeOptions(DirtyCommand.Help, null), typeof(HelpCommand) });
+                    }
+                    else
+                    {
+                        foreach (DatabaseType database in (DatabaseType[])Enum.GetValues(typeof(DatabaseType)))
+                        {
+                            var type = types.FirstOrDefault(t => t.Name == database.ToCommandConvetion(command));
+                            if (type != null)
+                            {
+                                testcases.Add(new object[] { MakeOptions(command, database), type });
+                            }
+                        }
+                    }
+                }
+                return testcases;
+            }
         }
 
         private static DirtyOptions MakeOptions(DirtyCommand command, DatabaseType? databaseType)

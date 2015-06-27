@@ -15,7 +15,7 @@ namespace Dirtybase.App.Options.Validators
         {
             var assembly = typeof(IOptionsValidator).Assembly;
             var types = assembly.GetTypes();
-            var validatorClassName = string.Format("{0}{1}", validatorName, Constants.OptionsValidatorConvention);
+            var validatorClassName = validatorName.ToOptionsValidatorConvetion();
             var validatorType = types.FirstOrDefault(t => t.Name == validatorClassName);
             var validator = (IOptionsValidator)Activator.CreateInstance(validatorType);
             return validator;
