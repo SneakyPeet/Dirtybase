@@ -13,11 +13,11 @@ namespace Dirtybase.Tests.Sqlite
         private const string databaseFile = "Dirtybase.db";
         private const string connectionstring = "Data Source = " + databaseFile + ";Version=3;";
         private const string arguments = "init -db sqlite -cs " + connectionstring;
-        private const string versionTableName = "dirtybase.Version";
+        private const string versionTableName = "DirtybaseVersion";
 
         [Test]
         [Category(TestTypes.EndToEnd)]
-        public void InitOnSqlDatabaseShouldAddDirtyBaseVerionTable()
+        public void InitOnSqliteShouldAddDirtyBaseVerionTable()
         {
             MakeSqliteDatabase();
             Program.Main(arguments.Split(' '));
