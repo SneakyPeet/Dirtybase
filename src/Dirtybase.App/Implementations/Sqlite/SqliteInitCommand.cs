@@ -57,6 +57,5 @@ namespace Dirtybase.App.Implementations.Sqlite
             command.CommandText = createVersionTableQuery;
             command.ExecuteNonQuery();
         }
-
     }
 }
