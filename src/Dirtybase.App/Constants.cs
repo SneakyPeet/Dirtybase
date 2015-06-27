@@ -8,6 +8,7 @@
         public const string DatabaseNotSupported = " is not a supported Database. " + HelpMessage;
         public const string InvalidConnectionString = "Invalid Connection String";
         public const string ScriptFolderNotSet = "Script Folder Not Set";
+        public const string DatabaseNotInitialized = "Dirtybase Not Initialized. Run init Command";
         
         public const string OptionsValidatorConvention = "OptionsValidator";
         public static string CommandConvention = "Command";

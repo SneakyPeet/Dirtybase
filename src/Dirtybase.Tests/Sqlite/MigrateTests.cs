@@ -18,5 +18,12 @@ namespace Dirtybase.Tests.Sqlite
             TearDown();
             Program.Main(arguments.Split(' '));
         }
+
+        [Test]
+        [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Dirtybase Not Initialized. Run init Command")]
+        public void IfVersionTableDoesNotExistThrowException()
+        {
+            Program.Main(arguments.Split(' '));
+        }
     }
 }
