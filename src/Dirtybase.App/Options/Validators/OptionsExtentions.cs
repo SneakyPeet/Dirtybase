@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Dirtybase.App.Options.Validators
 {
@@ -12,9 +13,10 @@ namespace Dirtybase.App.Options.Validators
 
         private static IOptionsValidator ResolveValidator(string validatorName)
         {
-            var baseType = typeof(IOptionsValidator);
-            var className = string.Format("{0}.{1}{2}", baseType.Namespace, validatorName, Constants.OptionsValidatorConvention);
-            var validatorType = baseType.Assembly.GetType(className, true);
+            var assembly = typeof(IOptionsValidator).Assembly;
+            var types = assembly.GetTypes();
+            var validatorClassName = string.Format("{0}{1}", validatorName, Constants.OptionsValidatorConvention);
+            var validatorType = types.FirstOrDefault(t => t.Name == validatorClassName);
             var validator = (IOptionsValidator)Activator.CreateInstance(validatorType);
             return validator;
         }

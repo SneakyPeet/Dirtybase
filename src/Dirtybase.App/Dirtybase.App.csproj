@@ -44,11 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandFactory.cs" />
+    <Compile Include="Implementations\Help\HelpCommand.cs" />
+    <Compile Include="Commands\IDirtyCommand.cs" />
     <Compile Include="Options\DatabaseType.cs" />
     <Compile Include="Options\DirtyCommand.cs" />
     <Compile Include="Options\DirtyOptions.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Options\Validators\BaseOptionsValidator.cs" />
+    <Compile Include="Options\Validators\DatabaseOptionsValidator.cs" />
     <Compile Include="Options\Validators\ConnectionStringValidator.cs" />
     <Compile Include="Options\Validators\Errors.cs" />
     <Compile Include="Options\Validators\HelpOptionsValidator.cs" />
@@ -56,8 +59,8 @@
     <Compile Include="Options\Validators\IOptionsValidator.cs" />
     <Compile Include="Options\Validators\MigrateOptionsValidator.cs" />
     <Compile Include="Options\Validators\OptionsExtentions.cs" />
-    <Compile Include="Options\Validators\SqliteOptionsValidator.cs" />
-    <Compile Include="Options\Validators\SqlOptionsValidator.cs" />
+    <Compile Include="Implementations\Sqlite\SqliteOptionsValidator.cs" />
+    <Compile Include="Implementations\Sql\SqlOptionsValidator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

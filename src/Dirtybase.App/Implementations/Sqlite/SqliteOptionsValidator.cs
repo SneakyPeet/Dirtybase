@@ -1,6 +1,7 @@
 using System.Data.SQLite;
+using Dirtybase.App.Options.Validators;
 
-namespace Dirtybase.App.Options.Validators
+namespace Dirtybase.App.Implementations.Sqlite
 {
     class SqliteOptionsValidator : ConnectionStringValidator, IOptionsValidator
     {

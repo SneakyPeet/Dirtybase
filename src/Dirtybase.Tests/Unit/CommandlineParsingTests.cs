@@ -6,6 +6,7 @@ using SharpTestsEx;
 namespace Dirtybase.Tests.Unit
 {
     [TestFixture]
+    [Category("Unit")]
     public class CommandlineParsingTests
     {
         private const string validSqlConnectionString =

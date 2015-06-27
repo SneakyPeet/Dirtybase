@@ -1,6 +1,7 @@
 using System.Data.SqlClient;
+using Dirtybase.App.Options.Validators;
 
-namespace Dirtybase.App.Options.Validators
+namespace Dirtybase.App.Implementations.Sql
 {
     class SqlOptionsValidator : ConnectionStringValidator, IOptionsValidator
     {
