@@ -1,0 +1,1 @@
+﻿CREATE TABLE Employee ( EmployeeId INT PRIMARY KEY, name nvarchar(20))

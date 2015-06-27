@@ -4,7 +4,6 @@ using System.IO;
 using Dirtybase.App;
 using Dirtybase.App.Implementations.Sqlite;
 using NUnit.Framework;
-using SharpTestsEx;
 
 namespace Dirtybase.Tests.Sqlite
 {
@@ -16,6 +15,8 @@ namespace Dirtybase.Tests.Sqlite
         private const string initArgs = "init -db sqlite -cs " + connectionstring;
         private const string migrateArgs = "migrate -db sqlite -cs " + connectionstring + " -sf " + scriptFolder;
         private const string v1 = "v1_CreateTeamTable.sql";
+        private const string v2 = "v2_CreateEmployeeTable.sql";
+        private const string v3 = "v3_DeleteTeamTable.sql";
 
         [SetUp]
         public override void SetUp()
@@ -66,28 +67,74 @@ namespace Dirtybase.Tests.Sqlite
             CopyFileToScriptFolder(v1);
             Program.Main(initArgs.Split(' '));
             Program.Main(migrateArgs.Split(' '));
-            AssertAgainstDatabase(HasUpdatedTeamTable);
-            AssertAgainstDatabase(HasV1Row);
+            AssertAgainstDatabase(DatabaseAtVersion1);
+        }
+        
+        [Test]
+        public void MultipleNewVersionShouldUpdateDatabaseAndVersionTableInOrder()
+        {
+            CopyFileToScriptFolder(v1);
+            CopyFileToScriptFolder(v2);
+            CopyFileToScriptFolder(v3);
+            Program.Main(initArgs.Split(' '));
+            Program.Main(migrateArgs.Split(' '));
+            AssertAgainstDatabase(DatabaseAtVersion3);
         }
 
-        private bool HasUpdatedTeamTable(SQLiteConnection connection)
+        private bool DatabaseAtVersion1(SQLiteConnection connection)
         {
-            const string query = "SELECT name FROM sqlite_master where name = 'Team';";
-            var command = new SQLiteCommand(query, connection);
-            using (var reader = command.ExecuteReader())
-            {
-                Assert.IsTrue(reader.HasRows, "Team table should be updated");
-            }
+            AssertTable(true, connection, "Team");
+            HasV1Row(connection);
+            return true;
+        }
+        
+        private bool DatabaseAtVersion3(SQLiteConnection connection)
+        {
+            AssertTable(false, connection, "Team");
+            AssertTable(true, connection, "Employee");
+            HasV3Rows(connection);
             return true;
         }
 
-        private bool HasV1Row(SQLiteConnection connection)
+        private void HasV3Rows(SQLiteConnection connection)
         {
-            const string query = "SELECT count(Version) FROM " + versionTableName + " where Version = 'v1' AND FileName = '" + v1 + "';";
+            HasV1Row(connection);
+            HasV2Row(connection);
+            HasV3Row(connection);
+        }
+
+        private void AssertTable(bool exists, SQLiteConnection connection, string tableName)
+        {
+            string query = string.Format("SELECT count(name) FROM sqlite_master where name = '{0}';", tableName);
+            var command = new SQLiteCommand(query, connection);
+            var rowCount = Convert.ToInt32(command.ExecuteScalar());
+
+            var expectedRowCount = exists ? 1 : 0;
+            var text = exists ? "Created" : "Deleted";
+            Assert.IsTrue(rowCount == expectedRowCount, string.Format("{0} Table Should Be {1}", tableName, text));
+        }
+
+        private void HasV1Row(SQLiteConnection connection)
+        {
+            HasVersionRow(connection, "v1", v1);
+        }
+
+        private void HasV2Row(SQLiteConnection connection)
+        {
+            HasVersionRow(connection, "v2", v2);
+        }
+
+        private void HasV3Row(SQLiteConnection connection)
+        {
+            HasVersionRow(connection, "v3", v3);
+        }
+
+        private static void HasVersionRow(SQLiteConnection connection, string version, string fileName)
+        {
+            var query = string.Format("SELECT count(Version) FROM {0} where Version = '{1}' AND FileName = '{2}';", versionTableName, version, fileName);
             var command = new SQLiteCommand(query, connection);
             var rowcount = Convert.ToInt32(command.ExecuteScalar());
-            Assert.IsTrue(rowcount == 1, "Version Should Be Added To Version Table");
-            return true;
+            Assert.IsTrue(rowcount == 1, string.Format("Version {0} Should Be Added To Version Table", version));
         }
 
         private void CopyFileToScriptFolder(string fileName)
