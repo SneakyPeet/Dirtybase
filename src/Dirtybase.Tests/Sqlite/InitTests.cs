@@ -14,7 +14,7 @@ namespace Dirtybase.Tests.Sqlite
         private const string arguments = "init -db sqlite -cs " + connectionstring;
 
         [Test]
-        public void InitOnSqliteShouldAddDirtyBaseVerionTable()
+        public void InitOnSqliteShouldAddDirtyBaseVersionTable()
         {
             Program.Main(arguments.Split(' '));
             this.AssertDirtybaseTableExists();

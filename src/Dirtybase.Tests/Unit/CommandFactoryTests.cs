@@ -64,7 +64,7 @@ namespace Dirtybase.Tests.Unit
 
         private static DirtyOptions MakeOptions(DirtyCommand command, DatabaseType? databaseType)
         {
-            return new DirtyOptions(command, databaseType, null);
+            return new DirtyOptions(command, databaseType, null, null);
         }
     }
 }

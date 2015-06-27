@@ -49,6 +49,7 @@
     <Compile Include="Implementations\Help\HelpCommand.cs" />
     <Compile Include="Commands\IDirtyCommand.cs" />
     <Compile Include="DirtybaseException.cs" />
+    <Compile Include="Implementations\Sqlite\SqliteCommandBase.cs" />
     <Compile Include="Implementations\Sqlite\SqliteInitCommand.cs" />
     <Compile Include="Implementations\Sqlite\SqliteMigrateCommand.cs" />
     <Compile Include="Implementations\Sql\SqlMigrateCommand.cs" />

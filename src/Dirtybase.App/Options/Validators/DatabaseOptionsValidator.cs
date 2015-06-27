@@ -2,7 +2,7 @@ namespace Dirtybase.App.Options.Validators
 {
     internal class DatabaseOptionsValidator
     {
-        public Errors Errors(DirtyOptions options)
+        public virtual Errors Errors(DirtyOptions options)
         {
             if (!options.Database.HasValue)
             {

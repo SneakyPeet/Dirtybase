@@ -11,12 +11,14 @@ namespace Dirtybase.App
         public DirtyCommand Command { get; private set; }
         public DatabaseType? Database { get; private set; }
         public string ConnectionString { get; private set; }
+        public string ScriptFolder { get; private set; }
 
-        public DirtyOptions(DirtyCommand command, DatabaseType? dbType, string connectionString)
+        public DirtyOptions(DirtyCommand command, DatabaseType? dbType, string connectionString, string scriptFolder)
         {
             this.Command = command;
             this.Database = dbType;
             this.ConnectionString = connectionString;
+            this.ScriptFolder = scriptFolder;
         }
 
         public DirtyOptions(string[] input)
@@ -85,6 +87,9 @@ namespace Dirtybase.App
                 case "cs":
                     this.SetConnectionString(args);
                     break;
+                case "sf":
+                    this.SetScriptFolder(args);
+                    break;
                 case "":
                     throw new ArgumentException(Constants.HelpMessage);
                 default:
@@ -116,6 +121,11 @@ namespace Dirtybase.App
             this.ConnectionString = GetSuppliedOption(args);
         }
 
+        private void SetScriptFolder(string[] args)
+        {
+            this.ScriptFolder = GetSuppliedOption(args);
+        }
+
         private static string GetSuppliedOption(string[] args)
         {
             var option = args[0];
@@ -144,14 +154,16 @@ namespace Dirtybase.App
         {
             return this.Command == other.Command
                 && this.Database == other.Database
-                && this.ConnectionString == other.ConnectionString;
+                && this.ConnectionString == other.ConnectionString
+                && this.ScriptFolder == other.ScriptFolder;
         }
 
         public override int GetHashCode()
         {
             return (int)this.Command
                 + (this.Database.HasValue ? (int)this.Database.Value : 0)
-                + this.ConnectionString.GetHashCode();
+                + this.ConnectionString.GetHashCode()
+                + this.ScriptFolder.GetHashCode();
         }
 
         public static bool operator ==(DirtyOptions left, DirtyOptions right)
