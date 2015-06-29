@@ -1,6 +1,6 @@
 using System;
 
-namespace Dirtybase.App.Implementations.Sqlite
+namespace Dirtybase.App.Exceptions
 {
     public class DirtybaseException : Exception
     {

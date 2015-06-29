@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using Dirtybase.App;
+using Dirtybase.App.Exceptions;
 using Dirtybase.App.Implementations.Sqlite;
 using Dirtybase.App.Options.Validators;
 using NUnit.Framework;
@@ -19,6 +20,7 @@ namespace Dirtybase.Tests.Sqlite
         private const string v1 = "v1_CreateTeamTable.sql";
         private const string v2 = "v2_CreateEmployeeTable.sql";
         private const string v3 = "v3_DeleteTeamTable.sql";
+        private const string badfilename = "v_BadName.sql";
 
         [SetUp]
         public override void SetUp()
@@ -81,6 +83,33 @@ namespace Dirtybase.Tests.Sqlite
             Program.Main(initArgs.Split(' '));
             Program.Main(migrateArgs.Split(' '));
             AssertAgainstDatabase(DatabaseAtVersion3);
+        }
+
+        [Test]
+        [ExpectedException(typeof(VersionFileNameFormatException), ExpectedMessage = "v_BadName.sql does not conform to the file naming convention")]
+        public void FileWithBadVersionNameShouldThrowException()
+        {
+            CopyFileToScriptFolder(badfilename);
+            Program.Main(initArgs.Split(' '));
+            Program.Main(migrateArgs.Split(' '));
+        }
+
+        [Test]
+        public void FilesShouldBeAppliedInOrder()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test]
+        public void AllFilesInSubFoldersShouldBeApplied()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Test]
+        public void TestTransactions()
+        {
+            throw new NotImplementedException();
         }
 
         private Errors DatabaseAtVersion1(SQLiteConnection connection)

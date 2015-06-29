@@ -1,4 +1,5 @@
 ﻿using Dirtybase.App;
+using Dirtybase.App.Exceptions;
 using Dirtybase.App.Implementations.Sqlite;
 using Dirtybase.App.Options.Validators;
 using NUnit.Framework;

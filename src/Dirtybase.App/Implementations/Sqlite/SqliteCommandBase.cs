@@ -1,5 +1,6 @@
 using System.Data.SQLite;
 using System.IO;
+using Dirtybase.App.Exceptions;
 
 namespace Dirtybase.App.Implementations.Sqlite
 {

@@ -1,7 +1,9 @@
+using Dirtybase.App.VersionComparison;
+
 namespace Dirtybase.App.Commands
 {
     public interface IDirtyCommand
     {
-        void Execute(DirtyOptions options);
+        void Execute(DirtyOptions options, IVersionComparor versionComparor);
     }
 }
