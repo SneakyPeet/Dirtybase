@@ -94,23 +94,35 @@ namespace Dirtybase.Tests.Sqlite
             Program.Main(migrateArgs.Split(' '));
         }
 
-        [Test]
-        public void FilesShouldBeAppliedInOrder()
-        {
-            throw new NotImplementedException();
-        }
+        //[Test]
+        //public void FilesShouldBeAppliedInOrder()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        [Test]
-        public void AllFilesInSubFoldersShouldBeApplied()
-        {
-            throw new NotImplementedException();
-        }
+        //[Test]
+        //public void AllFilesInSubFoldersShouldBeApplied()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        [Test]
-        public void TestTransactions()
-        {
-            throw new NotImplementedException();
-        }
+        //[Test]
+        //public void TestTransactions()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //[Test]
+        //public void FilesWithGoSeperatorShouldRun()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //[Test]
+        //public void WarnIfFileInDBandNotInFolder()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         private Errors DatabaseAtVersion1(SQLiteConnection connection)
         {
