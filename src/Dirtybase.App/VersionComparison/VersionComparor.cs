@@ -15,7 +15,7 @@ namespace Dirtybase.App.VersionComparison
         private IEnumerable<DirtybaseVersion> GetVersionFiles(DirtyOptions options)
         {
             //todo pass in extension
-            var files = Directory.GetFiles(options.ScriptFolder,"v*_*.sql");
+            var files = Directory.GetFiles(options.ScriptFolder, "v*_*.sql", SearchOption.AllDirectories);
             return files.Select(f => new DirtybaseVersion(f));
         }
     }

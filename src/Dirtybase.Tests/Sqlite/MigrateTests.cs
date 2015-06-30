@@ -46,6 +46,11 @@ namespace Dirtybase.Tests.Sqlite
         {
             if(Directory.Exists(scriptFolder))
             {
+                var info = Directory.GetDirectories(scriptFolder);
+                foreach(var directory in info)
+                {
+                    Directory.Delete(directory, true);
+                }
                 Directory.Delete(scriptFolder, true);
             }
         }
@@ -105,6 +110,17 @@ namespace Dirtybase.Tests.Sqlite
             ApplyVersion1();
             AssertAgainstDatabase(DatabaseAtVersion1);
             //when - then
+            Program.Main(migrateArgs.Split(' '));
+            AssertAgainstDatabase(DatabaseAtVersion3);
+        }
+
+        [Test]
+        public void AllFilesInSubFoldersShouldBeApplied()
+        {
+            CopyFileToScriptFolder(v1);
+            CopyFileToScriptFolder(v2,scriptFolder + "\\fooFolder");
+            CopyFileToScriptFolder(v3);
+            Program.Main(initArgs.Split(' '));
             Program.Main(migrateArgs.Split(' '));
             AssertAgainstDatabase(DatabaseAtVersion3);
         }
@@ -238,8 +254,17 @@ namespace Dirtybase.Tests.Sqlite
 
         private void CopyFileToScriptFolder(string fileName)
         {
+            CopyFileToScriptFolder(fileName, scriptFolder);
+        }
+
+        private void CopyFileToScriptFolder(string fileName, string folderpath)
+        {
             string source = Path.Combine("TestScripts", fileName);
-            string destination = Path.Combine(scriptFolder, fileName);
+            if(!Directory.Exists(folderpath))
+            {
+                Directory.CreateDirectory(folderpath);
+            }
+            string destination = Path.Combine(folderpath, fileName);
             File.Copy(source, destination, true);
         }
     }
