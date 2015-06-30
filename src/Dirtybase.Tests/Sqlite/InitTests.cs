@@ -1,6 +1,5 @@
 ﻿using Dirtybase.App;
 using Dirtybase.App.Exceptions;
-using Dirtybase.App.Implementations.Sqlite;
 using Dirtybase.App.Options.Validators;
 using NUnit.Framework;
 using System.Data.SQLite;
@@ -38,14 +37,16 @@ namespace Dirtybase.Tests.Sqlite
         private Errors DirtybaseVersionTableExists(SQLiteConnection connection)
         {
             const string query = "SELECT name FROM sqlite_master WHERE name ='" + versionTableName + "';";
-            var command = new SQLiteCommand(query, connection);
-            using (var reader = command.ExecuteReader())
+            using(var command = new SQLiteCommand(query, connection)) 
             {
-                if(reader.HasRows)
+                using (var reader = command.ExecuteReader())
                 {
-                    return new Errors();
+                    if(reader.HasRows)
+                    {
+                        return new Errors();
+                    }
+                    return new Errors{"Dirtybase Version Table Does Not Exist"};
                 }
-                return new Errors{"Dirtybase Version Table Does Not Exist"};
             }
         }
     }

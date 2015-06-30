@@ -94,6 +94,21 @@ namespace Dirtybase.Tests.Sqlite
             Program.Main(migrateArgs.Split(' '));
         }
 
+        [Test]
+        public void NewVersionsOverExistingVersionShouldApplyNewVersionsOnly()
+        {
+            //given
+            CopyFileToScriptFolder(v1);
+            CopyFileToScriptFolder(v2);
+            CopyFileToScriptFolder(v3);
+            Program.Main(initArgs.Split(' '));
+            ApplyVersion1();
+            AssertAgainstDatabase(DatabaseAtVersion1);
+            //when - then
+            Program.Main(migrateArgs.Split(' '));
+            AssertAgainstDatabase(DatabaseAtVersion3);
+        }
+
         //[Test]
         //public void FilesShouldBeAppliedInOrder()
         //{
@@ -124,6 +139,29 @@ namespace Dirtybase.Tests.Sqlite
         //    throw new NotImplementedException();
         //}
 
+        private void ApplyVersion1()
+        {
+            using (var connection = new SQLiteConnection(connectionstring))
+            {
+                connection.Open();
+                try
+                {
+                    var query = "CREATE TABLE Team ( TeamId INT PRIMARY KEY, name nvarchar(20));" +
+                                string.Format("INSERT INTO {0} (Version, FileName, DateAppliedUtc) VALUES ('{1}', '{2}', '{3}')", versionTableName, "v1", v1, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    using(var command = new SQLiteCommand(query, connection)) 
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception)
+                {
+                    connection.Close();
+                    throw;
+                }
+                connection.Close();
+            }
+        }
+
         private Errors DatabaseAtVersion1(SQLiteConnection connection)
         {
             var errors = new Errors();
@@ -153,8 +191,11 @@ namespace Dirtybase.Tests.Sqlite
         private IEnumerable<string> AssertTable(bool exists, SQLiteConnection connection, string tableName)
         {
             string query = string.Format("SELECT count(name) FROM sqlite_master where name = '{0}';", tableName);
-            var command = new SQLiteCommand(query, connection);
-            var rowCount = Convert.ToInt32(command.ExecuteScalar());
+            int rowCount;
+            using(var command = new SQLiteCommand(query, connection)) 
+            {
+                rowCount = Convert.ToInt32(command.ExecuteScalar());
+            }
 
             var expectedRowCount = exists ? 1 : 0;
             var text = exists ? "Created" : "Deleted";
@@ -183,8 +224,11 @@ namespace Dirtybase.Tests.Sqlite
         private Errors HasVersionRow(SQLiteConnection connection, string version, string fileName)
         {
             var query = string.Format("SELECT count(Version) FROM {0} where Version = '{1}' AND FileName = '{2}';", versionTableName, version, fileName);
-            var command = new SQLiteCommand(query, connection);
-            var rowcount = Convert.ToInt32(command.ExecuteScalar());
+            int rowcount;
+            using(var command = new SQLiteCommand(query, connection)) 
+            {
+                rowcount = Convert.ToInt32(command.ExecuteScalar());
+            }
             if (rowcount == 1)
             {
                 return new Errors();

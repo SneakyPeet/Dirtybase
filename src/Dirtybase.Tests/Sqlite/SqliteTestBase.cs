@@ -54,19 +54,21 @@ namespace Dirtybase.Tests.Sqlite
             using (var connection = new SQLiteConnection(connectionstring))
             {
                 connection.Open();
-                var command = connection.CreateCommand();
-                try
+                using(var command = connection.CreateCommand()) 
                 {
-                    foreach(var query in queries)
+                    try
                     {
-                        command.CommandText = query;
-                        command.ExecuteNonQuery();
+                        foreach(var query in queries)
+                        {
+                            command.CommandText = query;
+                            command.ExecuteNonQuery();
+                        }
                     }
-                }
-                catch (Exception)
-                {
-                    connection.Close();
-                    throw;
+                    catch (Exception)
+                    {
+                        connection.Close();
+                        throw;
+                    }
                 }
                 connection.Close();
             }

@@ -20,10 +20,12 @@ namespace Dirtybase.App.Implementations.Sqlite
 
         protected bool VersionTableExist(SQLiteConnection connection)
         {
-            var command = new SQLiteCommand(checkIfExistQuery, connection);
-            using (var reader = command.ExecuteReader())
+            using(var command = new SQLiteCommand(checkIfExistQuery, connection)) 
             {
-                return reader.HasRows;
+                using (var reader = command.ExecuteReader())
+                {
+                    return reader.HasRows;
+                }
             }
         }
     }

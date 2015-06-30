@@ -19,6 +19,13 @@ namespace Dirtybase.App.VersionComparison
             this.Version = GetVersionFromFileName(FileName);
         }
 
+        public DirtybaseVersion(string version, string fileName)
+        {
+            this.FilePath = fileName;
+            this.FileName = fileName;
+            this.Version = version;
+        }
+
         private string GetVersionFromFileName(string fileName)
         {
             var underscoreIndex = fileName.IndexOf('_');
@@ -35,16 +42,14 @@ namespace Dirtybase.App.VersionComparison
 
         protected bool Equals(DirtybaseVersion other)
         {
-            return string.Equals(this.Version, other.Version)
-                   && string.Equals(this.FileName, other.FileName);
+            return string.Equals(this.Version, other.Version);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((this.Version != null ? this.Version.GetHashCode() : 0) * 397)
-                       ^ (this.FileName != null ? this.FileName.GetHashCode() : 0);
+                return ((this.Version != null ? this.Version.GetHashCode() : 0) * 397);
             }
         }
 
@@ -60,7 +65,12 @@ namespace Dirtybase.App.VersionComparison
 
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
+            var version = obj as DirtybaseVersion;
+            if(version == null)
+            {
+                return false;
+            }
+            return Equals(version);
         }
     }
 }
