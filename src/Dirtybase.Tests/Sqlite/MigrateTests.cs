@@ -125,14 +125,22 @@ namespace Dirtybase.Tests.Sqlite
             AssertAgainstDatabase(DatabaseAtVersion3);
         }
 
-        //[Test]
-        //public void FilesShouldBeAppliedInOrder()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [Test]
+        [ExpectedException(typeof(VersionFileMissingException), ExpectedMessage = "The version file 'v1_CreateTeamTable.sql' cannot be found in script directory. Inconsistent versioning")]
+        public void VersionRowInDbAndNotInFolderShouldThrowException()
+        {
+            //given
+            CopyFileToScriptFolder(v2);
+            CopyFileToScriptFolder(v3);
+            Program.Main(initArgs.Split(' '));
+            ApplyVersion1();
+            AssertAgainstDatabase(DatabaseAtVersion1);
+            //when - then
+            Program.Main(migrateArgs.Split(' '));
+        }
 
         //[Test]
-        //public void AllFilesInSubFoldersShouldBeApplied()
+        //public void FilesShouldBeAppliedInOrder()
         //{
         //    throw new NotImplementedException();
         //}
@@ -149,11 +157,7 @@ namespace Dirtybase.Tests.Sqlite
         //    throw new NotImplementedException();
         //}
 
-        //[Test]
-        //public void WarnIfFileInDBandNotInFolder()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        
 
         private void ApplyVersion1()
         {

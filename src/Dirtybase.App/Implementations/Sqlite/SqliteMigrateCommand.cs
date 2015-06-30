@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using Dirtybase.App.Commands;
 using Dirtybase.App.Exceptions;
 using Dirtybase.App.VersionComparison;
@@ -25,7 +26,7 @@ namespace Dirtybase.App.Implementations.Sqlite
                         throw new DirtybaseException(Constants.DatabaseNotInitialized);
                     }
                     var existingVersions = GetExistingVersions(connection);
-                    var filesToApply = versionComparor.GetNewVersions(options, existingVersions);
+                    var filesToApply = versionComparor.GetNewVersions(options, existingVersions.ToList());
                     Applyfiles(connection, filesToApply);
                 }
                 catch(Exception)
