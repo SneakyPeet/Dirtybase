@@ -5,13 +5,14 @@ using Dirtybase.App.Exceptions;
 
 namespace Dirtybase.App.VersionComparison
 {
-    internal class VersionComparor : IVersionComparor
+    internal class VersionComparer : IVersionComparer
     {
         public IEnumerable<DirtybaseVersion> GetNewVersions(DirtyOptions options, List<DirtybaseVersion> existingVersions)
         {
             var versionFiles = GetVersionFiles(options);
             VerifyConsistentVersioning(existingVersions, versionFiles);
-            return versionFiles.Except(existingVersions);
+            var newversions = versionFiles.Except(existingVersions);
+            return newversions.OrderBy(x => x.Version, new NaturalComparer());
         }
 
         private List<DirtybaseVersion> GetVersionFiles(DirtyOptions options)

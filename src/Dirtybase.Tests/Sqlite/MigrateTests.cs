@@ -21,6 +21,10 @@ namespace Dirtybase.Tests.Sqlite
         private const string v2 = "v2_CreateEmployeeTable.sql";
         private const string v3 = "v3_DeleteTeamTable.sql";
         private const string badfilename = "v_BadName.sql";
+        private const string v22 = "v22_CreateTeamTable.sql";
+        private const string v113 = "v113_DeleteTeamTable.sql";
+        private const string v115 = "v1.1.5_CreateTeamTable.sql";
+        private const string v1115 = "v1.1.15_DeleteTeamTable.sql";
 
         [SetUp]
         public override void SetUp()
@@ -139,11 +143,25 @@ namespace Dirtybase.Tests.Sqlite
             Program.Main(migrateArgs.Split(' '));
         }
 
-        //[Test]
-        //public void FilesShouldBeAppliedInOrder()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [Test]
+        public void FilesShouldBeAppliedInOrder()
+        {
+            //Will Fail If Not Applied In Order
+            CopyFileToScriptFolder(v22);
+            CopyFileToScriptFolder(v113);
+            Program.Main(initArgs.Split(' '));
+            Program.Main(migrateArgs.Split(' '));
+        }
+
+        [Test]
+        public void FunnyVersionNamedFilesShouldBeAppliedInOrder()
+        {
+            //Will Fail If Not Applied In Order
+            CopyFileToScriptFolder(v115);
+            CopyFileToScriptFolder(v1115);
+            Program.Main(initArgs.Split(' '));
+            Program.Main(migrateArgs.Split(' '));
+        }
 
         //[Test]
         //public void TestTransactions()

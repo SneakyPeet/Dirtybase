@@ -59,6 +59,7 @@
     <Compile Include="TestTypes.cs" />
     <Compile Include="Unit\CommandlineParsingTests.cs" />
     <Compile Include="Unit\CommandFactoryTests.cs" />
+    <Compile Include="Unit\NaturalComparerTests.cs" />
     <Compile Include="Unit\EnsureCommandsExistTests.cs" />
     <Compile Include="Unit\EnsureValidatorsExistTests.cs" />
   </ItemGroup>
@@ -72,6 +73,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestScripts\v1.1.15_DeleteTeamTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\v1.1.5_CreateTeamTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\v113_DeleteTeamTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\v22_CreateTeamTable.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestScripts\v_BadName.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

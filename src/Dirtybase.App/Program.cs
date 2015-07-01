@@ -10,7 +10,7 @@ namespace Dirtybase.App
             var options = new DirtyOptions(args);
             var commandFactory = new CommandFactory();
             var command = commandFactory.Make(options);
-            command.Execute(options, new VersionComparor());
+            command.Execute(options, new VersionComparer());
         }
     }
 }

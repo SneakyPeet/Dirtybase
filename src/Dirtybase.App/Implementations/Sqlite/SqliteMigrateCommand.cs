@@ -13,7 +13,7 @@ namespace Dirtybase.App.Implementations.Sqlite
     {
         const string versionTableSelect = "SELECT * FROM " + versionTableName;
 
-        public void Execute(DirtyOptions options, IVersionComparor versionComparor)
+        public void Execute(DirtyOptions options, IVersionComparer versionComparer)
         {
             VerifyDatabaseExists(options.ConnectionString);
             using(var connection = new SQLiteConnection(options.ConnectionString))
@@ -26,7 +26,7 @@ namespace Dirtybase.App.Implementations.Sqlite
                         throw new DirtybaseException(Constants.DatabaseNotInitialized);
                     }
                     var existingVersions = GetExistingVersions(connection);
-                    var filesToApply = versionComparor.GetNewVersions(options, existingVersions.ToList());
+                    var filesToApply = versionComparer.GetNewVersions(options, existingVersions.ToList());
                     Applyfiles(connection, filesToApply);
                 }
                 catch(Exception)

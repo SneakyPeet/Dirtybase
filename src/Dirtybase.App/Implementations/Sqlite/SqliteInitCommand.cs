@@ -9,7 +9,7 @@ namespace Dirtybase.App.Implementations.Sqlite
     {
         private const string createVersionTableQuery = "CREATE TABLE " + versionTableName + "(Version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateAppliedUtc datetime)";
 
-        public void Execute(DirtyOptions options, IVersionComparor versionComparor)
+        public void Execute(DirtyOptions options, IVersionComparer versionComparer)
         {
             VerifyDatabaseExists(options.ConnectionString);
             using (var connection = new SQLiteConnection(options.ConnectionString))

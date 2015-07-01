@@ -52,7 +52,7 @@
     <Compile Include="Commands\IDirtyCommand.cs" />
     <Compile Include="Exceptions\DirtybaseException.cs" />
     <Compile Include="VersionComparison\DirtybaseVersion.cs" />
-    <Compile Include="VersionComparison\IVersionComparor.cs" />
+    <Compile Include="VersionComparison\IVersionComparer.cs" />
     <Compile Include="Implementations\Sqlite\SqliteCommandBase.cs" />
     <Compile Include="Implementations\Sqlite\SqliteInitCommand.cs" />
     <Compile Include="Implementations\Sqlite\SqliteMigrateCommand.cs" />
@@ -74,7 +74,8 @@
     <Compile Include="Implementations\Sql\SqlOptionsValidator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VersionComparison\VersionComparor.cs" />
+    <Compile Include="VersionComparison\NaturalComparer.cs" />
+    <Compile Include="VersionComparison\VersionComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -5,7 +5,7 @@ namespace Dirtybase.App.Implementations.Sql
 {
     class SqlMigrateCommand : IDirtyCommand
     {
-        public void Execute(DirtyOptions options, IVersionComparor versionComparor)
+        public void Execute(DirtyOptions options, IVersionComparer versionComparer)
         {
             throw new System.NotImplementedException();
         }
