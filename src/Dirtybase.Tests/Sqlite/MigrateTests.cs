@@ -25,7 +25,7 @@ namespace Dirtybase.Tests.Sqlite
         private const string v115 = "v1.1.5_CreateTeamTable.sql";
         private const string v1115 = "v1.1.15_DeleteTeamTable.sql";
         private const string vGo = "vgo_TestGoStatements.sql";
-
+        private const string vInvalidGo = "vInvalidgo_TestGoStatements.sql";
         [SetUp]
         public override void SetUp()
         {
@@ -172,11 +172,39 @@ namespace Dirtybase.Tests.Sqlite
             AssertAgainstDatabase(DatabaseAtVersionGo);
         }
 
-        //[Test]
-        //public void TestTransactions()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [Test]
+        public void InvalidGoSeperatedFileShouldNotApplyAnyStatements()
+        {
+            CopyFileToScriptFolder(vInvalidGo);
+            Program.Main(initArgs.Split(' '));
+            try
+            {
+                Program.Main(migrateArgs.Split(' '));
+            }
+            catch(SQLiteException e)
+            {
+                Assert.AreEqual("SQL logic error or missing database\r\nno such table: Teamfd", e.Message, "Not Expected Exception");
+            }
+            
+            AssertAgainstDatabase(DatabaseNotAtVersionGo);
+        }
+
+        [Test]
+        public void OnErrorShouldNotApplySubsequintFiles()
+        {
+            CopyFileToScriptFolder(vInvalidGo);
+            CopyFileToScriptFolder(v22);
+            Program.Main(initArgs.Split(' '));
+            try
+            {
+                Program.Main(migrateArgs.Split(' '));
+            }
+            catch (SQLiteException e)
+            {
+                Assert.AreEqual("SQL logic error or missing database\r\ntable Team already exists", e.Message, "Not Expected Exception");
+            }
+            AssertAgainstDatabase(DatabaseNotAtVersionGo);
+        }
 
         private void ApplyVersion1()
         {
@@ -224,6 +252,15 @@ namespace Dirtybase.Tests.Sqlite
             errors.AddRange(AssertTable(false, connection, "Team"));
             errors.AddRange(AssertTable(true, connection, "Employee"));
             errors.AddRange(HasVersionRow(connection, "vgo", vGo));
+            return errors;
+        }
+
+        private Errors DatabaseNotAtVersionGo(SQLiteConnection connection)
+        {
+            var errors = new Errors();
+            errors.AddRange(AssertTable(false, connection, "Team"));
+            errors.AddRange(AssertTable(false, connection, "Employee"));
+            errors.AddRange(DoesNotHaveVersionRow(connection, "vInvalidGo", vInvalidGo));
             return errors;
         }
 
@@ -282,6 +319,21 @@ namespace Dirtybase.Tests.Sqlite
                 return new Errors();
             }
             return new Errors { string.Format("Version {0} Should Be Added To Version Table", version) };
+        }
+
+        private Errors DoesNotHaveVersionRow(SQLiteConnection connection, string version, string fileName)
+        {
+            var query = string.Format("SELECT count(Version) FROM {0} where Version = '{1}' AND FileName = '{2}';", versionTableName, version, fileName);
+            int rowcount;
+            using (var command = new SQLiteCommand(query, connection))
+            {
+                rowcount = Convert.ToInt32(command.ExecuteScalar());
+            }
+            if (rowcount == 0)
+            {
+                return new Errors();
+            }
+            return new Errors { string.Format("Version {0} Should Not Be Added To Version Table", version) };
         }
 
         private void CopyFileToScriptFolder(string fileName)
