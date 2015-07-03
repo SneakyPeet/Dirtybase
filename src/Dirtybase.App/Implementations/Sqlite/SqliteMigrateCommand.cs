@@ -74,12 +74,13 @@ namespace Dirtybase.App.Implementations.Sqlite
             using(var command = new SQLiteCommand(connection))
             {
                 var statements = SplitSqlStatements(script);
+                var transaction = connection.BeginTransaction();
                 foreach(var statement in statements)
                 {
                     command.CommandText = statement;
                     command.ExecuteNonQuery();
                 }
-                
+                transaction.Commit();
             }
         }
 

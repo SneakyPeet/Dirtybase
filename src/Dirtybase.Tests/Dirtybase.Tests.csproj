@@ -73,7 +73,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestScripts\vInvalidgo_TestGoStatements.sql">
+    <Content Include="TestScripts\v1Invalidgo_TestGoStatements.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestScripts\vgo_TestGoStatements.sql">

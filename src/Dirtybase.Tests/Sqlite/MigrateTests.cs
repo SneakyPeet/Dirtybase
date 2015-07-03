@@ -25,7 +25,7 @@ namespace Dirtybase.Tests.Sqlite
         private const string v115 = "v1.1.5_CreateTeamTable.sql";
         private const string v1115 = "v1.1.15_DeleteTeamTable.sql";
         private const string vGo = "vgo_TestGoStatements.sql";
-        private const string vInvalidGo = "vInvalidgo_TestGoStatements.sql";
+        private const string v1InvalidGo = "v1Invalidgo_TestGoStatements.sql";
         [SetUp]
         public override void SetUp()
         {
@@ -175,7 +175,7 @@ namespace Dirtybase.Tests.Sqlite
         [Test]
         public void InvalidGoSeperatedFileShouldNotApplyAnyStatements()
         {
-            CopyFileToScriptFolder(vInvalidGo);
+            CopyFileToScriptFolder(v1InvalidGo);
             Program.Main(initArgs.Split(' '));
             try
             {
@@ -192,7 +192,7 @@ namespace Dirtybase.Tests.Sqlite
         [Test]
         public void OnErrorShouldNotApplySubsequintFiles()
         {
-            CopyFileToScriptFolder(vInvalidGo);
+            CopyFileToScriptFolder(v1InvalidGo);
             CopyFileToScriptFolder(v22);
             Program.Main(initArgs.Split(' '));
             try
@@ -201,7 +201,7 @@ namespace Dirtybase.Tests.Sqlite
             }
             catch (SQLiteException e)
             {
-                Assert.AreEqual("SQL logic error or missing database\r\ntable Team already exists", e.Message, "Not Expected Exception");
+                Assert.AreEqual("SQL logic error or missing database\r\nno such table: Teamfd", e.Message, "Not Expected Exception");
             }
             AssertAgainstDatabase(DatabaseNotAtVersionGo);
         }
@@ -260,7 +260,7 @@ namespace Dirtybase.Tests.Sqlite
             var errors = new Errors();
             errors.AddRange(AssertTable(false, connection, "Team"));
             errors.AddRange(AssertTable(false, connection, "Employee"));
-            errors.AddRange(DoesNotHaveVersionRow(connection, "vInvalidGo", vInvalidGo));
+            errors.AddRange(DoesNotHaveVersionRow(connection, "v1InvalidGo", v1InvalidGo));
             return errors;
         }
 
