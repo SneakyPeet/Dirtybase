@@ -4,7 +4,6 @@ using System.Data.SQLite;
 using System.IO;
 using Dirtybase.App;
 using Dirtybase.App.Exceptions;
-using Dirtybase.App.Implementations.Sqlite;
 using Dirtybase.App.Options.Validators;
 using NUnit.Framework;
 
@@ -25,6 +24,7 @@ namespace Dirtybase.Tests.Sqlite
         private const string v113 = "v113_DeleteTeamTable.sql";
         private const string v115 = "v1.1.5_CreateTeamTable.sql";
         private const string v1115 = "v1.1.15_DeleteTeamTable.sql";
+        private const string vGo = "vgo_TestGoStatements.sql";
 
         [SetUp]
         public override void SetUp()
@@ -163,19 +163,20 @@ namespace Dirtybase.Tests.Sqlite
             Program.Main(migrateArgs.Split(' '));
         }
 
+        [Test]
+        public void FilesWithGoSeperatorShouldRun()
+        {
+            CopyFileToScriptFolder(vGo);
+            Program.Main(initArgs.Split(' '));
+            Program.Main(migrateArgs.Split(' '));
+            AssertAgainstDatabase(DatabaseAtVersionGo);
+        }
+
         //[Test]
         //public void TestTransactions()
         //{
         //    throw new NotImplementedException();
         //}
-
-        //[Test]
-        //public void FilesWithGoSeperatorShouldRun()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        
 
         private void ApplyVersion1()
         {
@@ -214,6 +215,15 @@ namespace Dirtybase.Tests.Sqlite
             errors.AddRange(AssertTable(false, connection, "Team"));
             errors.AddRange(AssertTable(true, connection, "Employee"));
             errors.AddRange(HasV3Rows(connection));
+            return errors;
+        }
+
+        private Errors DatabaseAtVersionGo(SQLiteConnection connection)
+        {
+            var errors = new Errors();
+            errors.AddRange(AssertTable(false, connection, "Team"));
+            errors.AddRange(AssertTable(true, connection, "Employee"));
+            errors.AddRange(HasVersionRow(connection, "vgo", vGo));
             return errors;
         }
 

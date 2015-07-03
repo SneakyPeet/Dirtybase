@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Dirtybase.App.Commands;
 using Dirtybase.App.Exceptions;
 using Dirtybase.App.VersionComparison;
@@ -63,11 +64,22 @@ namespace Dirtybase.App.Implementations.Sqlite
             {
                 var fileInfo = new FileInfo(file.FilePath);
                 string script = fileInfo.OpenText().ReadToEnd();
-                using(var command = new SQLiteCommand(script, connection)) 
+                ApplyScript(connection, script);
+                InsertVersion(connection, file);
+            }
+        }
+
+        private static void ApplyScript(SQLiteConnection connection, string script)
+        {
+            using(var command = new SQLiteCommand(connection))
+            {
+                var statements = SplitSqlStatements(script);
+                foreach(var statement in statements)
                 {
+                    command.CommandText = statement;
                     command.ExecuteNonQuery();
                 }
-                InsertVersion(connection, file);
+                
             }
         }
 
@@ -78,6 +90,23 @@ namespace Dirtybase.App.Implementations.Sqlite
             {
                 command.ExecuteNonQuery();
             }
+        }
+
+        //from http://stackoverflow.com/questions/18596876/go-statements-blowing-up-sql-execution-in-net/18597052#18597052
+        private static IEnumerable<string> SplitSqlStatements(string sqlScript)
+        {
+            // Split by "GO" statements
+            var statements = Regex.Split(
+                    sqlScript,
+                    @"^\s*GO\s* ($ | \-\- .*$)",
+                    RegexOptions.Multiline |
+                    RegexOptions.IgnorePatternWhitespace |
+                    RegexOptions.IgnoreCase);
+
+            // Remove empties, trim, and return
+            return statements
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim(' ', '\r', '\n'));
         }
     }
 }
