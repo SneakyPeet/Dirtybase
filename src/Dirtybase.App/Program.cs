@@ -1,5 +1,4 @@
-﻿using Dirtybase.App.Commands;
-using Dirtybase.App.VersionComparison;
+﻿using Dirtybase.Core;
 
 namespace Dirtybase.App
 {
@@ -7,10 +6,7 @@ namespace Dirtybase.App
     {
         public static void Main(string[] args)
         {
-            var options = new DirtyOptions(args);
-            var commandFactory = new CommandFactory();
-            var command = commandFactory.Make(options);
-            command.Execute(options, new VersionComparer());
+            new DirtybaseApi().Do(args);
         }
     }
 }

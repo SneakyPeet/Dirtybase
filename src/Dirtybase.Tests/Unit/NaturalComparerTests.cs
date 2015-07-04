@@ -1,4 +1,4 @@
-﻿using Dirtybase.App.VersionComparison;
+﻿using Dirtybase.Core.VersionComparison;
 using NUnit.Framework;
 using SharpTestsEx;
 

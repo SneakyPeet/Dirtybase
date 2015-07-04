@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using Dirtybase.App;
-using Dirtybase.App.Exceptions;
-using Dirtybase.App.Options.Validators;
+using Dirtybase.Core.Exceptions;
+using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 
 namespace Dirtybase.Tests.Sqlite
 {
     [TestFixture]
-    [Category(TestTypes.EndToEnd)]
+    [Category(TestTypes.Unit)]
     public class MigrateTests : SqliteTestBase
     {
         private const string scriptFolder = "testfolder";
@@ -64,22 +63,22 @@ namespace Dirtybase.Tests.Sqlite
         public void IfDatabaseDoesNotExistThrowException()
         {
             TearDown();
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
         }
 
         [Test]
         [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Dirtybase Not Initialized. Run init Command")]
         public void IfVersionTableDoesNotExistThrowException()
         {
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
         }
 
         [Test]
         public void NewVersionShouldUpdateDatabaseAndVersionTable()
         {
             CopyFileToScriptFolder(v1);
-            Program.Main(initArgs.Split(' '));
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
             AssertAgainstDatabase(DatabaseAtVersion1);
         }
         
@@ -89,8 +88,8 @@ namespace Dirtybase.Tests.Sqlite
             CopyFileToScriptFolder(v1);
             CopyFileToScriptFolder(v2);
             CopyFileToScriptFolder(v3);
-            Program.Main(initArgs.Split(' '));
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
             AssertAgainstDatabase(DatabaseAtVersion3);
         }
 
@@ -99,8 +98,8 @@ namespace Dirtybase.Tests.Sqlite
         public void FileWithBadVersionNameShouldThrowException()
         {
             CopyFileToScriptFolder(badfilename);
-            Program.Main(initArgs.Split(' '));
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
         }
 
         [Test]
@@ -110,11 +109,11 @@ namespace Dirtybase.Tests.Sqlite
             CopyFileToScriptFolder(v1);
             CopyFileToScriptFolder(v2);
             CopyFileToScriptFolder(v3);
-            Program.Main(initArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
             ApplyVersion1();
             AssertAgainstDatabase(DatabaseAtVersion1);
             //when - then
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
             AssertAgainstDatabase(DatabaseAtVersion3);
         }
 
@@ -124,8 +123,8 @@ namespace Dirtybase.Tests.Sqlite
             CopyFileToScriptFolder(v1);
             CopyFileToScriptFolder(v2,scriptFolder + "\\fooFolder");
             CopyFileToScriptFolder(v3);
-            Program.Main(initArgs.Split(' '));
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
             AssertAgainstDatabase(DatabaseAtVersion3);
         }
 
@@ -136,11 +135,11 @@ namespace Dirtybase.Tests.Sqlite
             //given
             CopyFileToScriptFolder(v2);
             CopyFileToScriptFolder(v3);
-            Program.Main(initArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
             ApplyVersion1();
             AssertAgainstDatabase(DatabaseAtVersion1);
             //when - then
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
         }
 
         [Test]
@@ -149,8 +148,8 @@ namespace Dirtybase.Tests.Sqlite
             //Will Fail If Not Applied In Order
             CopyFileToScriptFolder(v22);
             CopyFileToScriptFolder(v113);
-            Program.Main(initArgs.Split(' '));
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
         }
 
         [Test]
@@ -159,16 +158,16 @@ namespace Dirtybase.Tests.Sqlite
             //Will Fail If Not Applied In Order
             CopyFileToScriptFolder(v115);
             CopyFileToScriptFolder(v1115);
-            Program.Main(initArgs.Split(' '));
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
         }
 
         [Test]
         public void FilesWithGoSeperatorShouldRun()
         {
             CopyFileToScriptFolder(vGo);
-            Program.Main(initArgs.Split(' '));
-            Program.Main(migrateArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
+            api.Do(migrateArgs.Split(' '));
             AssertAgainstDatabase(DatabaseAtVersionGo);
         }
 
@@ -176,10 +175,10 @@ namespace Dirtybase.Tests.Sqlite
         public void InvalidGoSeperatedFileShouldNotApplyAnyStatements()
         {
             CopyFileToScriptFolder(v1InvalidGo);
-            Program.Main(initArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
             try
             {
-                Program.Main(migrateArgs.Split(' '));
+                api.Do(migrateArgs.Split(' '));
             }
             catch(SQLiteException e)
             {
@@ -194,10 +193,10 @@ namespace Dirtybase.Tests.Sqlite
         {
             CopyFileToScriptFolder(v1InvalidGo);
             CopyFileToScriptFolder(v22);
-            Program.Main(initArgs.Split(' '));
+            api.Do(initArgs.Split(' '));
             try
             {
-                Program.Main(migrateArgs.Split(' '));
+                api.Do(migrateArgs.Split(' '));
             }
             catch (SQLiteException e)
             {

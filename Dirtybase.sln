@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dirtybase.App", "src\Dirtyb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dirtybase.Tests", "src\Dirtybase.Tests\Dirtybase.Tests.csproj", "{769C6262-D1C0-49AC-BBF6-B29A317B3588}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dirtybase.Core", "src\Dirtybase.Core\Dirtybase.Core.csproj", "{5B420D5B-47F9-4AC3-8AB4-997564842ACA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{769C6262-D1C0-49AC-BBF6-B29A317B3588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{769C6262-D1C0-49AC-BBF6-B29A317B3588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{769C6262-D1C0-49AC-BBF6-B29A317B3588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B420D5B-47F9-4AC3-8AB4-997564842ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B420D5B-47F9-4AC3-8AB4-997564842ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B420D5B-47F9-4AC3-8AB4-997564842ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B420D5B-47F9-4AC3-8AB4-997564842ACA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

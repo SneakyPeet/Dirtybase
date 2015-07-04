@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{769C6262-D1C0-49AC-BBF6-B29A317B3588}</ProjectGuid>
+    <ProjectGuid>{5B420D5B-47F9-4AC3-8AB4-997564842ACA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dirtybase.Tests</RootNamespace>
-    <AssemblyName>Dirtybase.Tests</AssemblyName>
+    <RootNamespace>Dirtybase.Core</RootNamespace>
+    <AssemblyName>Dirtybase.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,19 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpTestsEx">
-      <HintPath>..\..\packages\SharpTestsEx.1.1.1\lib\SharpTestsEx.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpTestsEx.Mvc">
-      <HintPath>..\..\packages\SharpTestsEx.1.1.1\lib\SharpTestsEx.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.97.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Data.SQLite">
       <HintPath>..\..\packages\System.Data.SQLite.Core.1.0.97.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -52,57 +42,43 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirtybaseApi.cs" />
+    <Compile Include="Commands\CommandFactory.cs" />
+    <Compile Include="Commands\IDirtyCommand.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="ConvetionExtensions.cs" />
+    <Compile Include="Exceptions\DirtybaseException.cs" />
+    <Compile Include="Exceptions\VersionFileMissingException.cs" />
+    <Compile Include="Exceptions\VersionFileNameFormatException.cs" />
+    <Compile Include="Implementations\Help\HelpCommand.cs" />
+    <Compile Include="Implementations\Sqlite\SqliteCommandBase.cs" />
+    <Compile Include="Implementations\Sqlite\SqliteInitCommand.cs" />
+    <Compile Include="Implementations\Sqlite\SqliteMigrateCommand.cs" />
+    <Compile Include="Implementations\Sqlite\SqliteOptionsValidator.cs" />
+    <Compile Include="Implementations\Sql\SqlInitCommand.cs" />
+    <Compile Include="Implementations\Sql\SqlMigrateCommand.cs" />
+    <Compile Include="Implementations\Sql\SqlOptionsValidator.cs" />
+    <Compile Include="Options\DatabaseType.cs" />
+    <Compile Include="Options\DirtyCommand.cs" />
+    <Compile Include="Options\DirtyOptions.cs" />
+    <Compile Include="Options\Validators\ConnectionStringValidator.cs" />
+    <Compile Include="Options\Validators\DatabaseOptionsValidator.cs" />
+    <Compile Include="Options\Validators\Errors.cs" />
+    <Compile Include="Options\Validators\HelpOptionsValidator.cs" />
+    <Compile Include="Options\Validators\InitOptionsValidator.cs" />
+    <Compile Include="Options\Validators\IOptionsValidator.cs" />
+    <Compile Include="Options\Validators\MigrateOptionsValidator.cs" />
+    <Compile Include="Options\Validators\OptionsExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sqlite\MigrateTests.cs" />
-    <Compile Include="Sqlite\InitTests.cs" />
-    <Compile Include="Sqlite\SqliteTestBase.cs" />
-    <Compile Include="TestTypes.cs" />
-    <Compile Include="Unit\CommandlineParsingTests.cs" />
-    <Compile Include="Unit\CommandFactoryTests.cs" />
-    <Compile Include="Unit\NaturalComparerTests.cs" />
-    <Compile Include="Unit\EnsureCommandsExistTests.cs" />
-    <Compile Include="Unit\EnsureValidatorsExistTests.cs" />
+    <Compile Include="VersionComparison\DirtybaseVersion.cs" />
+    <Compile Include="VersionComparison\IVersionComparer.cs" />
+    <Compile Include="VersionComparison\NaturalComparer.cs" />
+    <Compile Include="VersionComparison\NaturalValueParser.cs" />
+    <Compile Include="VersionComparison\StringType.cs" />
+    <Compile Include="VersionComparison\VersionComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestScripts\v1Invalidgo_TestGoStatements.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\vgo_TestGoStatements.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\v1.1.15_DeleteTeamTable.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\v1.1.5_CreateTeamTable.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\v113_DeleteTeamTable.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\v22_CreateTeamTable.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\v_BadName.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\v2_CreateEmployeeTable.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\v3_DeleteTeamTable.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestScripts\v1_CreateTeamTable.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Dirtybase.Core\Dirtybase.Core.csproj">
-      <Project>{5b420d5b-47f9-4ac3-8ab4-997564842aca}</Project>
-      <Name>Dirtybase.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\..\packages\System.Data.SQLite.Core.1.0.97.0\build\net45\System.Data.SQLite.Core.targets')" />
