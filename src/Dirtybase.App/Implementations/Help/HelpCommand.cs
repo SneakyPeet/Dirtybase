@@ -1,3 +1,4 @@
+using System;
 using Dirtybase.App.Commands;
 using Dirtybase.App.VersionComparison;
 
@@ -7,7 +8,7 @@ namespace Dirtybase.App.Implementations.Help
     {
         public void Execute(DirtyOptions options, IVersionComparer versionComparer)
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine("Help Can Be Found At https://github.com/SneakyPeet/Dirtybase");
         }
     }
 }
