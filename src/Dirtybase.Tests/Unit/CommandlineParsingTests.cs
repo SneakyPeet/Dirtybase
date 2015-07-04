@@ -1,4 +1,5 @@
 ﻿using System;
+using Dirtybase.Core.Exceptions;
 using Dirtybase.Core.Options;
 using NUnit.Framework;
 using SharpTestsEx;
@@ -35,30 +36,30 @@ namespace Dirtybase.Tests.Unit
 
         private static readonly object[] negativeTestCases =
             {
-                new object[] { "", typeof(ArgumentException), "use 'help' option for help" },
-                new object[] { "foo", typeof(ArgumentException), "foo is not an option. use 'help' option for help" },
-                new object[] { "init", typeof(ArgumentException), "Database Type Required. use 'help' option for help" },
-                new object[] { "init -db", typeof(ArgumentException), "Database Type Required. use 'help' option for help" },
-                new object[] { "init -db foo", typeof(ArgumentException), "foo is not a supported Database. use 'help' option for help" },
-                new object[] { "init -db sql", typeof(ArgumentException), "Invalid Connection String" },
-                new object[] { "init -db sql -cs", typeof(ArgumentException), "Invalid Connection String" },
-                new object[] { "init -db sql -cs foo", typeof(ArgumentException), "Invalid Connection String" },
-                new object[] { "init -db sqlite", typeof(ArgumentException), "Invalid Connection String" },
-                new object[] { "init -db sqlite -cs", typeof(ArgumentException), "Invalid Connection String" },
-                new object[] { "init -db sqlite -cs foo", typeof(ArgumentException), "Invalid Connection String" },
-                new object[] { "migrate", typeof(ArgumentException), "Database Type Required. use 'help' option for help" },
-                new object[] { "migrate -db", typeof(ArgumentException), "Database Type Required. use 'help' option for help" },
-                new object[] { "migrate -db foo", typeof(ArgumentException), "foo is not a supported Database. use 'help' option for help" },
-                new object[] { "migrate -db sql", typeof(ArgumentException), "Invalid Connection String\nScript Folder Not Set" },
-                new object[] { "migrate -db sql -cs", typeof(ArgumentException), "Invalid Connection String\nScript Folder Not Set" },
-                new object[] { "migrate -db sql -cs foo", typeof(ArgumentException), "Invalid Connection String\nScript Folder Not Set" },
-                new object[] { "migrate -db sql -cs " + validSqlConnectionString, typeof(ArgumentException), "Script Folder Not Set" },
-                new object[] { "migrate -db sql -vf -cs " + validSqlConnectionString, typeof(ArgumentException), "Script Folder Not Set" },
-                new object[] { "migrate -db sqlite", typeof(ArgumentException), "Invalid Connection String\nScript Folder Not Set" },
-                new object[] { "migrate -db sqlite -cs", typeof(ArgumentException), "Invalid Connection String\nScript Folder Not Set" },
-                new object[] { "migrate -db sqlite -cs foo", typeof(ArgumentException), "Invalid Connection String\nScript Folder Not Set" },
-                new object[] { "migrate -db sqlite -cs " + validSqliteConnectionString, typeof(ArgumentException), "Script Folder Not Set" },
-                new object[] { "migrate -db sqlite -vf -cs " + validSqliteConnectionString, typeof(ArgumentException), "Script Folder Not Set" },
+                new object[] { "", typeof(DirtybaseException), "use 'help' option for help" },
+                new object[] { "foo", typeof(DirtybaseException), "foo is not an option. use 'help' option for help" },
+                new object[] { "init", typeof(DirtybaseException), "Database Type Required. use 'help' option for help" },
+                new object[] { "init -db", typeof(DirtybaseException), "Database Type Required. use 'help' option for help" },
+                new object[] { "init -db foo", typeof(DirtybaseException), "foo is not a supported Database. use 'help' option for help" },
+                new object[] { "init -db sql", typeof(DirtybaseException), "Invalid Connection String" },
+                new object[] { "init -db sql -cs", typeof(DirtybaseException), "Invalid Connection String" },
+                new object[] { "init -db sql -cs foo", typeof(DirtybaseException), "Invalid Connection String" },
+                new object[] { "init -db sqlite", typeof(DirtybaseException), "Invalid Connection String" },
+                new object[] { "init -db sqlite -cs", typeof(DirtybaseException), "Invalid Connection String" },
+                new object[] { "init -db sqlite -cs foo", typeof(DirtybaseException), "Invalid Connection String" },
+                new object[] { "migrate", typeof(DirtybaseException), "Database Type Required. use 'help' option for help" },
+                new object[] { "migrate -db", typeof(DirtybaseException), "Database Type Required. use 'help' option for help" },
+                new object[] { "migrate -db foo", typeof(DirtybaseException), "foo is not a supported Database. use 'help' option for help" },
+                new object[] { "migrate -db sql", typeof(DirtybaseException), "Invalid Connection String\nScript Folder Not Set" },
+                new object[] { "migrate -db sql -cs", typeof(DirtybaseException), "Invalid Connection String\nScript Folder Not Set" },
+                new object[] { "migrate -db sql -cs foo", typeof(DirtybaseException), "Invalid Connection String\nScript Folder Not Set" },
+                new object[] { "migrate -db sql -cs " + validSqlConnectionString, typeof(DirtybaseException), "Script Folder Not Set" },
+                new object[] { "migrate -db sql -vf -cs " + validSqlConnectionString, typeof(DirtybaseException), "Script Folder Not Set" },
+                new object[] { "migrate -db sqlite", typeof(DirtybaseException), "Invalid Connection String\nScript Folder Not Set" },
+                new object[] { "migrate -db sqlite -cs", typeof(DirtybaseException), "Invalid Connection String\nScript Folder Not Set" },
+                new object[] { "migrate -db sqlite -cs foo", typeof(DirtybaseException), "Invalid Connection String\nScript Folder Not Set" },
+                new object[] { "migrate -db sqlite -cs " + validSqliteConnectionString, typeof(DirtybaseException), "Script Folder Not Set" },
+                new object[] { "migrate -db sqlite -vf -cs " + validSqliteConnectionString, typeof(DirtybaseException), "Script Folder Not Set" },
             };
 
         [Test]
@@ -69,7 +70,7 @@ namespace Dirtybase.Tests.Unit
             {
                 var args= input.Split(' ');
                 new DirtyOptions(args);
-                throw new Exception("exception not thrown");
+                Assert.Fail("exception not thrown");
             }
             catch(Exception e)
             {

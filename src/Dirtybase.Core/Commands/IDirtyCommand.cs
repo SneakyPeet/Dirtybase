@@ -5,6 +5,6 @@ namespace Dirtybase.Core.Commands
 {
     public interface IDirtyCommand
     {
-        void Execute(DirtyOptions options, IVersionComparer versionComparer);
+        void Execute(DirtyOptions options, IVersionComparer versionComparer, INotifier notifier);
     }
 }

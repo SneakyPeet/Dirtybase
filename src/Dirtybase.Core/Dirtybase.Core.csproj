@@ -58,6 +58,7 @@
     <Compile Include="Implementations\Sql\SqlInitCommand.cs" />
     <Compile Include="Implementations\Sql\SqlMigrateCommand.cs" />
     <Compile Include="Implementations\Sql\SqlOptionsValidator.cs" />
+    <Compile Include="INotify.cs" />
     <Compile Include="Options\DatabaseType.cs" />
     <Compile Include="Options\DirtyCommand.cs" />
     <Compile Include="Options\DirtyOptions.cs" />

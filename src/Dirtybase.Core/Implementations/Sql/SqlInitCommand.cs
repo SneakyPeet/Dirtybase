@@ -6,7 +6,7 @@ namespace Dirtybase.Core.Implementations.Sql
 {
     class SqlInitCommand : IDirtyCommand
     {
-        public void Execute(DirtyOptions options, IVersionComparer versionComparer)
+        public void Execute(DirtyOptions options, IVersionComparer versionComparer, INotifier notifier)
         {
             throw new System.NotImplementedException();
         }

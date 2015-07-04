@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dirtybase.Core.Exceptions;
 
 namespace Dirtybase.Core.Options.Validators
 {
@@ -10,7 +10,7 @@ namespace Dirtybase.Core.Options.Validators
         {
             if (this.Any())
             {
-                throw new ArgumentException(this.Message);
+                throw new DirtybaseException(this.Message);
             }
         }
 

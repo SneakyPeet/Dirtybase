@@ -17,7 +17,7 @@ namespace Dirtybase.Tests.Sqlite
         protected const string createVerisonTableQuery =
             "CREATE TABLE " + versionTableName + "(version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateApplied datetime)";
         
-        protected DirtybaseApi api = new DirtybaseApi();
+        protected DirtybaseApi api = new DirtybaseApi(new TestNotifier());
 
         [SetUp]
         public virtual void SetUp()

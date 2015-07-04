@@ -56,6 +56,7 @@
     <Compile Include="Sqlite\MigrateTests.cs" />
     <Compile Include="Sqlite\InitTests.cs" />
     <Compile Include="Sqlite\SqliteTestBase.cs" />
+    <Compile Include="Sqlite\TestNotifier.cs" />
     <Compile Include="TestTypes.cs" />
     <Compile Include="Unit\CommandlineParsingTests.cs" />
     <Compile Include="Unit\CommandFactoryTests.cs" />

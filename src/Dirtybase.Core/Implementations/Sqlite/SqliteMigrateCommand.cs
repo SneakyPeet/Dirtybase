@@ -15,7 +15,7 @@ namespace Dirtybase.Core.Implementations.Sqlite
     {
         const string versionTableSelect = "SELECT * FROM " + versionTableName;
 
-        public void Execute(DirtyOptions options, IVersionComparer versionComparer)
+        public void Execute(DirtyOptions options, IVersionComparer versionComparer, INotifier notifier)
         {
             this.VerifyDatabaseExists(options.ConnectionString);
             using(var connection = new SQLiteConnection(options.ConnectionString))

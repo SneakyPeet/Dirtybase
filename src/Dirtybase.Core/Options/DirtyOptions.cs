@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dirtybase.Core.Exceptions;
 using Dirtybase.Core.Options.Validators;
 
 namespace Dirtybase.Core.Options
@@ -34,7 +35,7 @@ namespace Dirtybase.Core.Options
             var args = argsAsString.Split(sepperators, StringSplitOptions.None);
             if(args == null || args.Length == 0)
             {
-                throw new ArgumentException(Constants.HelpMessage);
+                throw new DirtybaseException(Constants.HelpMessage);
             }
             return args;
         }
@@ -54,9 +55,9 @@ namespace Dirtybase.Core.Options
                     this.ParseCommand(args, DirtyCommand.Help);
                     break;
                 case "":
-                    throw new ArgumentException(Constants.HelpMessage);
+                    throw new DirtybaseException(Constants.HelpMessage);
                 default:
-                    throw new ArgumentException(option + Constants.NotAnOption);
+                    throw new DirtybaseException(option + Constants.NotAnOption);
             }
         }
 
@@ -90,9 +91,9 @@ namespace Dirtybase.Core.Options
                     this.SetScriptFolder(args);
                     break;
                 case "":
-                    throw new ArgumentException(Constants.HelpMessage);
+                    throw new DirtybaseException(Constants.HelpMessage);
                 default:
-                    throw new ArgumentException(option + Constants.NotAnOption);
+                    throw new DirtybaseException(option + Constants.NotAnOption);
             }
             this.ParseNextOption(args);
         }
@@ -109,9 +110,9 @@ namespace Dirtybase.Core.Options
                     this.Database = DatabaseType.Sqlite;
                     break;
                 case "":
-                    throw new ArgumentException(Constants.DatabaseTypeRequired);
+                    throw new DirtybaseException(Constants.DatabaseTypeRequired);
                 default:
-                    throw new ArgumentException(db + Constants.DatabaseNotSupported);
+                    throw new DirtybaseException(db + Constants.DatabaseNotSupported);
             }
         }
 
