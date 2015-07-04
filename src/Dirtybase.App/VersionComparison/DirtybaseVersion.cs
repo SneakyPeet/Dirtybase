@@ -33,7 +33,7 @@ namespace Dirtybase.App.VersionComparison
             {
                 throw new VersionFileNameFormatException(fileName);
             }
-            return fileName.Substring(0, underscoreIndex);
+            return fileName.Substring(1, underscoreIndex-1);
         }
 
         public string Version { get; set; }

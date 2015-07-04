@@ -17,16 +17,18 @@ namespace Dirtybase.Tests.Unit
         }
 
         [Test]
-        [TestCase("va","vb",-1)]
-        [TestCase("vb", "vb", 0)]
-        [TestCase("vb", "va", 1)]
-        [TestCase("v22", "v113", -1)]
-        [TestCase("v1.1.115", "v1.1.15", 1)]
-        [TestCase("va.2.b", "va.3.b", -1)]
-        [TestCase("v....", "va", -1)]
-        [TestCase("v1.5c", "v1.5c", 0)]
-        [TestCase("vaaa", "vaa", 1)]
-        [TestCase("v1.2.515", "v1.15.1", -1)]
+        [TestCase("a","b",-1)]
+        [TestCase("113", "113", 0)]
+        [TestCase("b", "b", 0)]
+        [TestCase("b", "a", 1)]
+        [TestCase("22", "113", -1)]
+        [TestCase("1.1.115", "1.1.15", 1)]
+        [TestCase("a.2.b", "a.3.b", -1)]
+        [TestCase("....", "a", -1)]
+        [TestCase("1.5c", "1.5c", 0)]
+        [TestCase("aaa", "aa", 1)]
+        [TestCase("1.2.515", "1.15.1", -1)]
+        [TestCase("a", "1", -1)]
         public void Test(string item1, string item2, int expectedOutput)
         {
             var output = comparer.Compare(item1, item2);

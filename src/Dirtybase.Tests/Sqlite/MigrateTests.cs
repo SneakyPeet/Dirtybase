@@ -15,7 +15,7 @@ namespace Dirtybase.Tests.Sqlite
     {
         private const string scriptFolder = "testfolder";
         private const string initArgs = "init -db sqlite -cs " + connectionstring;
-        private const string migrateArgs = "migrate -db sqlite -cs " + connectionstring + " -sf " + scriptFolder;
+        private const string migrateArgs = "migrate -db sqlite -cs " + connectionstring + " -vf " + scriptFolder;
         private const string v1 = "v1_CreateTeamTable.sql";
         private const string v2 = "v2_CreateEmployeeTable.sql";
         private const string v3 = "v3_DeleteTeamTable.sql";
@@ -214,7 +214,7 @@ namespace Dirtybase.Tests.Sqlite
                 try
                 {
                     var query = "CREATE TABLE Team ( TeamId INT PRIMARY KEY, name nvarchar(20));" +
-                                string.Format("INSERT INTO {0} (Version, FileName, DateAppliedUtc) VALUES ('{1}', '{2}', '{3}')", versionTableName, "v1", v1, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                                string.Format("INSERT INTO {0} (Version, FileName, DateAppliedUtc) VALUES ('{1}', '{2}', '{3}')", versionTableName, "1", v1, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                     using(var command = new SQLiteCommand(query, connection)) 
                     {
                         command.ExecuteNonQuery();
@@ -251,7 +251,7 @@ namespace Dirtybase.Tests.Sqlite
             var errors = new Errors();
             errors.AddRange(AssertTable(false, connection, "Team"));
             errors.AddRange(AssertTable(true, connection, "Employee"));
-            errors.AddRange(HasVersionRow(connection, "vgo", vGo));
+            errors.AddRange(HasVersionRow(connection, "go", vGo));
             return errors;
         }
 
@@ -260,7 +260,7 @@ namespace Dirtybase.Tests.Sqlite
             var errors = new Errors();
             errors.AddRange(AssertTable(false, connection, "Team"));
             errors.AddRange(AssertTable(false, connection, "Employee"));
-            errors.AddRange(DoesNotHaveVersionRow(connection, "v1InvalidGo", v1InvalidGo));
+            errors.AddRange(DoesNotHaveVersionRow(connection, "1InvalidGo", v1InvalidGo));
             return errors;
         }
 
@@ -293,17 +293,17 @@ namespace Dirtybase.Tests.Sqlite
 
         private IEnumerable<string> HasV1Row(SQLiteConnection connection)
         {
-            return HasVersionRow(connection, "v1", v1);
+            return HasVersionRow(connection, "1", v1);
         }
 
         private IEnumerable<string> HasV2Row(SQLiteConnection connection)
         {
-            return HasVersionRow(connection, "v2", v2);
+            return HasVersionRow(connection, "2", v2);
         }
 
         private IEnumerable<string> HasV3Row(SQLiteConnection connection)
         {
-            return HasVersionRow(connection, "v3", v3);
+            return HasVersionRow(connection, "3", v3);
         }
 
         private Errors HasVersionRow(SQLiteConnection connection, string version, string fileName)

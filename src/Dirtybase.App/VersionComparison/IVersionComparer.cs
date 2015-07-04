@@ -4,6 +4,6 @@ namespace Dirtybase.App.VersionComparison
 {
     public interface IVersionComparer
     {
-        IEnumerable<DirtybaseVersion> GetNewVersions(DirtyOptions options, List<DirtybaseVersion> existingVersions);
+        IList<DirtybaseVersion> GetNewVersions(DirtyOptions options, List<DirtybaseVersion> existingVersions);
     }
 }

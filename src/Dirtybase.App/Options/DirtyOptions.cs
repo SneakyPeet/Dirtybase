@@ -87,7 +87,7 @@ namespace Dirtybase.App
                 case "cs":
                     this.SetConnectionString(args);
                     break;
-                case "sf":
+                case "vf":
                     this.SetScriptFolder(args);
                     break;
                 case "":

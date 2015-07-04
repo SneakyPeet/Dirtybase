@@ -4,9 +4,9 @@ namespace Dirtybase.App.VersionComparison
 {
     class NaturalValueParser
     {
-        private readonly string input;
+        private string input;
         private int currentIndex;
-        private readonly int length;
+        private int length;
 
         public bool HasMoreToRead { get; private set; }
 
@@ -18,12 +18,32 @@ namespace Dirtybase.App.VersionComparison
         {
             this.CurrentNaturalStringType = NaturalStringType.Empty;
             this.value = null;
-            this.HasMoreToRead = !string.IsNullOrWhiteSpace(input);
             this.currentIndex = 0;
-            if (this.HasMoreToRead)
+            if(string.IsNullOrWhiteSpace(input))
             {
-                this.input = input;
-                this.length = input.Length;
+                HasMoreToRead = false;
+            }
+            else
+            {
+                this.Initialize(input);
+            }
+        }
+
+        private void Initialize(string input)
+        {
+            this.HasMoreToRead = true;
+            this.input = input;
+            this.length = input.Length;
+            var ch = input[0];
+            if(char.IsLetter(ch))
+            {
+                this.CurrentNaturalStringType = NaturalStringType.Text;
+                this.value = ch.ToString();
+            }
+            else if(char.IsDigit(ch))
+            {
+                this.CurrentNaturalStringType = NaturalStringType.Number;
+                this.value = Int32.Parse(ch.ToString());
             }
         }
 
@@ -31,9 +51,9 @@ namespace Dirtybase.App.VersionComparison
         {
             if (this.HasMoreToRead)
             {
-                if (this.length - 1 == this.currentIndex)
+                if (this.length <= this.currentIndex)
                 {
-                    this.SetEmpty();
+                    this.HasMoreToRead = false;
                 }
                 else
                 {
@@ -56,10 +76,6 @@ namespace Dirtybase.App.VersionComparison
                         this.currentIndex++;
                         this.ReadNext();
                     }
-                }
-                if (this.length == this.currentIndex)
-                {
-                    this.HasMoreToRead = false;
                 }
             }
         }
