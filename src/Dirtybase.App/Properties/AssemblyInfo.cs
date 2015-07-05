@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Dirtybase.App")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Dirtybase is a persistence version/migration command line tool. Dirtybase will compare version files in a folder to the version of a data store, then apply the version files in order to migrate the data store to the latest version. This is useful for keeping data stores on different environments up to date and automating deployments.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Pieter Koornhof")]
 [assembly: AssemblyProduct("Dirtybase.App")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
