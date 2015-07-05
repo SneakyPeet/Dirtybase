@@ -1,0 +1,1 @@
+nunit-console-x86 /noshadow .\src\Dirtybase.Tests\bin\Release\Dirtybase.Tests.dll
