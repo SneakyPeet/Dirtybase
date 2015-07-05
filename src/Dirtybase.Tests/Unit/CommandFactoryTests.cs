@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Dirtybase.App;
-using Dirtybase.App.Commands;
-using Dirtybase.App.Implementations.Help;
-using Dirtybase.App.Options;
+using Dirtybase.Core;
+using Dirtybase.Core.Commands;
+using Dirtybase.Core.Implementations.Help;
+using Dirtybase.Core.Options;
 using NUnit.Framework;
 using SharpTestsEx;
 

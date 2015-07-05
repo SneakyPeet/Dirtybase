@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using Dirtybase.App.Options.Validators;
+using Dirtybase.Core;
+using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 
 namespace Dirtybase.Tests.Sqlite
@@ -15,6 +16,8 @@ namespace Dirtybase.Tests.Sqlite
         protected const string versionTableName = "DirtybaseVersions";
         protected const string createVerisonTableQuery =
             "CREATE TABLE " + versionTableName + "(version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateApplied datetime)";
+        
+        protected DirtybaseApi api = new DirtybaseApi(new TestNotifier());
 
         [SetUp]
         public virtual void SetUp()

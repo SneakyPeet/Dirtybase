@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Dirtybase.App;
-using Dirtybase.App.Options;
-using Dirtybase.App.Options.Validators;
+using Dirtybase.Core;
+using Dirtybase.Core.Options;
+using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 
 namespace Dirtybase.Tests.Unit

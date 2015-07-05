@@ -1,21 +1,20 @@
-﻿using Dirtybase.App;
-using Dirtybase.App.Exceptions;
-using Dirtybase.App.Options.Validators;
+﻿using Dirtybase.Core.Exceptions;
+using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 using System.Data.SQLite;
 
 namespace Dirtybase.Tests.Sqlite
 {
     [TestFixture]
-    [Category(TestTypes.EndToEnd)]
+    [Category(TestTypes.Unit)]
     public class InitTests : SqliteTestBase
     {
         private const string arguments = "init -db sqlite -cs " + connectionstring;
-
+        
         [Test]
         public void InitOnSqliteShouldAddDirtyBaseVersionTable()
         {
-            Program.Main(arguments.Split(' '));
+            api.Do(arguments.Split(' '));
             AssertAgainstDatabase(DirtybaseVersionTableExists);
         }
 
@@ -23,7 +22,7 @@ namespace Dirtybase.Tests.Sqlite
         public void InitOnExistingDirtyBaseSqliteDoNothing()
         {
             this.CreateVersionTable();
-            Program.Main(arguments.Split(' '));
+            api.Do(arguments.Split(' '));
         }
 
         [Test]
@@ -31,7 +30,7 @@ namespace Dirtybase.Tests.Sqlite
         public void IfDatabaseDoesNotExistThrowException()
         {
             TearDown();
-            Program.Main(arguments.Split(' '));
+            api.Do(arguments.Split(' '));
         }
 
         private Errors DirtybaseVersionTableExists(SQLiteConnection connection)

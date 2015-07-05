@@ -3,6 +3,6 @@
     public class TestTypes
     {
         public const string Unit = "Unit";
-        public const string EndToEnd = "Unit";
+        public const string EndToEnd = "EndToEnd";
     }
 }
