@@ -4,10 +4,7 @@
 [![NuGet Version](http://img.shields.io/nuget/v/Dirtybase.svg?style=flat)](https://www.nuget.org/packages/Dirtybase/) 
 [![NuGet Downloads](http://img.shields.io/nuget/dt/Dirtybase.svg?style=flat)](https://www.nuget.org/packages/Dirtybase/)
 
-Still Under Construction 
-
----
-Dirtybase is a persistence version/migration command line tool.
+**Dirtybase** is a persistence version/migration command line tool.
 
 Dirtybase will compare `version` files in a folder to the version of a data store, then apply the version files in order to migrate the data store to the latest version. 
 
@@ -20,7 +17,7 @@ Supported Data stores
 
 ###Usage
 
-The Console application included in your project via its [nuget package](https://www.nuget.org/packages/Dirtybase/).
+The console application can be included in your project via [nuget](https://www.nuget.org/packages/Dirtybase/).
 
 **Init**
 
@@ -30,7 +27,7 @@ Initializes Dirtybase on the data store. This action is only required once.
 
 **Migrate**
 
-Compares version files to applied data store versions, and applies version files not yet applied to the data store.
+Compares version files to the applied data store versions, and applies version files not yet applied to the data store.
  
 `> migrate -db {database type} -cs {connection string} -vf {path to version script folder}`
 
@@ -67,4 +64,6 @@ Version are sorted using a natural sorting order.
 To add a new data store type just add to the enum `DatabaseType` in the `Options\DatabaseType.cs` file. This will cause the unit tests to fail, detailing which files you need to add and implement.
 
 Please write sufficient unit tests for new behavior.
+
+CI is hosted on [AppVeyor](https://ci.appveyor.com/project/Pieter/dirtybase-oxlqt)
 
