@@ -1,7 +1,8 @@
 # Dirtybase
 
 [![Build status](https://ci.appveyor.com/api/projects/status/c0h9y0pn0rumkj0v/branch/master?svg=true)](https://ci.appveyor.com/project/Pieter/dirtybase/branch/master)
-
+[![NuGet Version](http://img.shields.io/nuget/v/Dirtybase.svg?style=flat)](https://www.nuget.org/packages/Dirtybase/) 
+[![NuGet Downloads](http://img.shields.io/nuget/dt/Dirtybase.svg?style=flat)](https://www.nuget.org/packages/Dirtybase/)
 Still Under Construction 
 
 ---

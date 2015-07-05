@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Dirtybase.Core")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Core Assembly for the dirtybase application")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HP")]
+[assembly: AssemblyCompany("Pieter Koornhof")]
 [assembly: AssemblyProduct("Dirtybase.Core")]
 [assembly: AssemblyCopyright("Copyright © HP 2015")]
 [assembly: AssemblyTrademark("")]
