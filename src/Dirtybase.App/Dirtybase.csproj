@@ -7,8 +7,8 @@
     <ProjectGuid>{F9F99FE5-3D88-46C6-8F8F-8A5136C1B69F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dirtybase.App</RootNamespace>
-    <AssemblyName>Dirtybase.App</AssemblyName>
+    <RootNamespace>Dirtybase</RootNamespace>
+    <AssemblyName>Dirtybase</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
