@@ -1,60 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
-using System.IO;
+using System.Data.Common;
 using System.Linq;
 using Dirtybase.Core;
 using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 
-namespace Dirtybase.Tests.Sqlite
+namespace Dirtybase.Tests.SqlImplementations.Helpers
 {
-    public abstract class SqliteTestBase
+    public abstract class DbTestBase<TDbConnection> where TDbConnection : DbConnection
     {
-        protected const string databaseFile = "Dirtybase.db";
-        protected const string connectionstring = "Data Source = " + databaseFile + ";Version=3;";
-        protected const string versionTableName = "DirtybaseVersions";
-        protected const string createVerisonTableQuery =
-            "CREATE TABLE " + versionTableName + "(version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateApplied datetime)";
+        protected abstract string ConnectionString { get; }
+        protected abstract string VersionTableName { get; }
+        protected abstract string CreateVerisonTableQuery { get; }
         
         protected DirtybaseApi api = new DirtybaseApi(new TestNotifier());
 
-        [SetUp]
-        public virtual void SetUp()
-        {
-            this.MakeSqliteDatabase();
-        }
-
-        [TearDown]
-        public virtual void TearDown()
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            DeleteSqliteDatabase();
-        }
-
-        private void MakeSqliteDatabase()
-        {
-            DeleteSqliteDatabase();
-            SQLiteConnection.CreateFile(databaseFile);
-        }
-
-        private static void DeleteSqliteDatabase()
-        {
-            if (File.Exists(databaseFile))
-            {
-                File.Delete(databaseFile);
-            }
-        }
-
         protected void CreateVersionTable()
         {
-            RunCommands(new[] { createVerisonTableQuery });
+            this.RunCommands(new[] { this.CreateVerisonTableQuery });
         }
 
         protected void RunCommands(IEnumerable<string> queries)
         {
-            using (var connection = new SQLiteConnection(connectionstring))
+            
+            using (var connection = this.MakeConnection())
             {
                 connection.Open();
                 using(var command = connection.CreateCommand()) 
@@ -77,9 +47,9 @@ namespace Dirtybase.Tests.Sqlite
             }
         }
 
-        protected void AssertAgainstDatabase(Func<SQLiteConnection, Errors> validator)
+        protected void AssertAgainstDatabase(Func<TDbConnection, Errors> validator)
         {
-            using (var connection = new SQLiteConnection(connectionstring))
+            using (var connection = this.MakeConnection())
             {
                 connection.Open();
                 try
@@ -97,6 +67,11 @@ namespace Dirtybase.Tests.Sqlite
                 }
                 connection.Close();
             }
+        }
+
+        private TDbConnection MakeConnection()
+        {
+            return Activator.CreateInstance(typeof(TDbConnection), new object[] { this.ConnectionString }) as TDbConnection;
         }
     }
 }

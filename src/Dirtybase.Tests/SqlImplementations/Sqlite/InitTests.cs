@@ -3,39 +3,39 @@ using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 using System.Data.SQLite;
 
-namespace Dirtybase.Tests.Sqlite
+namespace Dirtybase.Tests.SqlImplementations.Sqlite
 {
     [TestFixture]
     [Category(TestTypes.Unit)]
     public class InitTests : SqliteTestBase
     {
-        private const string arguments = "init -db sqlite -cs " + connectionstring;
+        private string Arguments { get { return "init -db sqlite -cs " + this.ConnectionString; } }
         
         [Test]
-        public void InitOnSqliteShouldAddDirtyBaseVersionTable()
+        public void InitShouldAddDirtyBaseVersionTable()
         {
-            api.Do(arguments.Split(' '));
-            AssertAgainstDatabase(DirtybaseVersionTableExists);
+            this.api.Do(this.Arguments.Split(' '));
+            this.AssertAgainstDatabase(this.DirtybaseVersionTableExists);
         }
 
         [Test]
         public void InitOnExistingDirtyBaseSqliteDoNothing()
         {
             this.CreateVersionTable();
-            api.Do(arguments.Split(' '));
+            this.api.Do(this.Arguments.Split(' '));
         }
 
         [Test]
         [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Database Does Not Exist")]
         public void IfDatabaseDoesNotExistThrowException()
         {
-            TearDown();
-            api.Do(arguments.Split(' '));
+            this.TearDown();
+            this.api.Do(this.Arguments.Split(' '));
         }
 
         private Errors DirtybaseVersionTableExists(SQLiteConnection connection)
         {
-            const string query = "SELECT name FROM sqlite_master WHERE name ='" + versionTableName + "';";
+            string query = "SELECT name FROM sqlite_master WHERE name ='" + VersionTableName + "';";
             using(var command = new SQLiteCommand(query, connection)) 
             {
                 using (var reader = command.ExecuteReader())
@@ -48,5 +48,7 @@ namespace Dirtybase.Tests.Sqlite
                 }
             }
         }
+
+        
     }
 }

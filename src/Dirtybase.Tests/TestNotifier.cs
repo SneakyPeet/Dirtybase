@@ -1,6 +1,6 @@
 ﻿using Dirtybase.Core;
 
-namespace Dirtybase.Tests.Sqlite
+namespace Dirtybase.Tests
 {
     public class TestNotifier : INotifier
     {

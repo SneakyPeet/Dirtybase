@@ -6,15 +6,15 @@ using Dirtybase.Core.Exceptions;
 using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 
-namespace Dirtybase.Tests.Sqlite
+namespace Dirtybase.Tests.SqlImplementations.Sqlite
 {
     [TestFixture]
     [Category(TestTypes.Unit)]
     public class MigrateTests : SqliteTestBase
     {
         private const string scriptFolder = "testfolder";
-        private const string initArgs = "init -db sqlite -cs " + connectionstring;
-        private const string migrateArgs = "migrate -db sqlite -cs " + connectionstring + " -vf " + scriptFolder;
+        private string InitArgs { get { return "init -db sqlite -cs " + this.ConnectionString; } }
+        private string MigrateArgs {get {return "migrate -db sqlite -cs " + this.ConnectionString + " -vf " + scriptFolder;}}
         private const string v1 = "v1_CreateTeamTable.sql";
         private const string v2 = "v2_CreateEmployeeTable.sql";
         private const string v3 = "v3_DeleteTeamTable.sql";
@@ -29,7 +29,7 @@ namespace Dirtybase.Tests.Sqlite
         public override void SetUp()
         {
             base.SetUp();
-            CreateScriptsFolder();
+            this.CreateScriptsFolder();
         }
 
         [SetUp]
@@ -62,70 +62,70 @@ namespace Dirtybase.Tests.Sqlite
         [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Database Does Not Exist")]
         public void IfDatabaseDoesNotExistThrowException()
         {
-            TearDown();
-            api.Do(migrateArgs.Split(' '));
+            this.TearDown();
+            this.api.Do(this.MigrateArgs.Split(' '));
         }
 
         [Test]
         [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Dirtybase Not Initialized. Run init Command")]
         public void IfVersionTableDoesNotExistThrowException()
         {
-            api.Do(migrateArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
         }
 
         [Test]
         public void NewVersionShouldUpdateDatabaseAndVersionTable()
         {
-            CopyFileToScriptFolder(v1);
-            api.Do(initArgs.Split(' '));
-            api.Do(migrateArgs.Split(' '));
-            AssertAgainstDatabase(DatabaseAtVersion1);
+            this.CopyFileToScriptFolder(v1);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersion1);
         }
         
         [Test]
         public void MultipleNewVersionShouldUpdateDatabaseAndVersionTableInOrder()
         {
-            CopyFileToScriptFolder(v1);
-            CopyFileToScriptFolder(v2);
-            CopyFileToScriptFolder(v3);
-            api.Do(initArgs.Split(' '));
-            api.Do(migrateArgs.Split(' '));
-            AssertAgainstDatabase(DatabaseAtVersion3);
+            this.CopyFileToScriptFolder(v1);
+            this.CopyFileToScriptFolder(v2);
+            this.CopyFileToScriptFolder(v3);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersion3);
         }
 
         [Test]
         [ExpectedException(typeof(VersionFileNameFormatException), ExpectedMessage = "v_BadName.sql does not conform to the file naming convention")]
         public void FileWithBadVersionNameShouldThrowException()
         {
-            CopyFileToScriptFolder(badfilename);
-            api.Do(initArgs.Split(' '));
-            api.Do(migrateArgs.Split(' '));
+            this.CopyFileToScriptFolder(badfilename);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
         }
 
         [Test]
         public void NewVersionsOverExistingVersionShouldApplyNewVersionsOnly()
         {
             //given
-            CopyFileToScriptFolder(v1);
-            CopyFileToScriptFolder(v2);
-            CopyFileToScriptFolder(v3);
-            api.Do(initArgs.Split(' '));
-            ApplyVersion1();
-            AssertAgainstDatabase(DatabaseAtVersion1);
+            this.CopyFileToScriptFolder(v1);
+            this.CopyFileToScriptFolder(v2);
+            this.CopyFileToScriptFolder(v3);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.ApplyVersion1();
+            this.AssertAgainstDatabase(this.DatabaseAtVersion1);
             //when - then
-            api.Do(migrateArgs.Split(' '));
-            AssertAgainstDatabase(DatabaseAtVersion3);
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersion3);
         }
 
         [Test]
         public void AllFilesInSubFoldersShouldBeApplied()
         {
-            CopyFileToScriptFolder(v1);
-            CopyFileToScriptFolder(v2,scriptFolder + "\\fooFolder");
-            CopyFileToScriptFolder(v3);
-            api.Do(initArgs.Split(' '));
-            api.Do(migrateArgs.Split(' '));
-            AssertAgainstDatabase(DatabaseAtVersion3);
+            this.CopyFileToScriptFolder(v1);
+            this.CopyFileToScriptFolder(v2,scriptFolder + "\\fooFolder");
+            this.CopyFileToScriptFolder(v3);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersion3);
         }
 
         [Test]
@@ -133,87 +133,87 @@ namespace Dirtybase.Tests.Sqlite
         public void VersionRowInDbAndNotInFolderShouldThrowException()
         {
             //given
-            CopyFileToScriptFolder(v2);
-            CopyFileToScriptFolder(v3);
-            api.Do(initArgs.Split(' '));
-            ApplyVersion1();
-            AssertAgainstDatabase(DatabaseAtVersion1);
+            this.CopyFileToScriptFolder(v2);
+            this.CopyFileToScriptFolder(v3);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.ApplyVersion1();
+            this.AssertAgainstDatabase(this.DatabaseAtVersion1);
             //when - then
-            api.Do(migrateArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
         }
 
         [Test]
         public void FilesShouldBeAppliedInOrder()
         {
             //Will Fail If Not Applied In Order
-            CopyFileToScriptFolder(v22);
-            CopyFileToScriptFolder(v113);
-            api.Do(initArgs.Split(' '));
-            api.Do(migrateArgs.Split(' '));
+            this.CopyFileToScriptFolder(v22);
+            this.CopyFileToScriptFolder(v113);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
         }
 
         [Test]
         public void FunnyVersionNamedFilesShouldBeAppliedInOrder()
         {
             //Will Fail If Not Applied In Order
-            CopyFileToScriptFolder(v115);
-            CopyFileToScriptFolder(v1115);
-            api.Do(initArgs.Split(' '));
-            api.Do(migrateArgs.Split(' '));
+            this.CopyFileToScriptFolder(v115);
+            this.CopyFileToScriptFolder(v1115);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
         }
 
         [Test]
         public void FilesWithGoSeperatorShouldRun()
         {
-            CopyFileToScriptFolder(vGo);
-            api.Do(initArgs.Split(' '));
-            api.Do(migrateArgs.Split(' '));
-            AssertAgainstDatabase(DatabaseAtVersionGo);
+            this.CopyFileToScriptFolder(vGo);
+            this.api.Do(this.InitArgs.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersionGo);
         }
 
         [Test]
         public void InvalidGoSeperatedFileShouldNotApplyAnyStatements()
         {
-            CopyFileToScriptFolder(v1InvalidGo);
-            api.Do(initArgs.Split(' '));
+            this.CopyFileToScriptFolder(v1InvalidGo);
+            this.api.Do(this.InitArgs.Split(' '));
             try
             {
-                api.Do(migrateArgs.Split(' '));
+                this.api.Do(this.MigrateArgs.Split(' '));
             }
             catch(SQLiteException e)
             {
                 Assert.AreEqual("SQL logic error or missing database\r\nno such table: Teamfd", e.Message, "Not Expected Exception");
             }
             
-            AssertAgainstDatabase(DatabaseNotAtVersionGo);
+            this.AssertAgainstDatabase(this.DatabaseNotAtVersionGo);
         }
 
         [Test]
         public void OnErrorShouldNotApplySubsequintFiles()
         {
-            CopyFileToScriptFolder(v1InvalidGo);
-            CopyFileToScriptFolder(v22);
-            api.Do(initArgs.Split(' '));
+            this.CopyFileToScriptFolder(v1InvalidGo);
+            this.CopyFileToScriptFolder(v22);
+            this.api.Do(this.InitArgs.Split(' '));
             try
             {
-                api.Do(migrateArgs.Split(' '));
+                this.api.Do(this.MigrateArgs.Split(' '));
             }
             catch (SQLiteException e)
             {
                 Assert.AreEqual("SQL logic error or missing database\r\nno such table: Teamfd", e.Message, "Not Expected Exception");
             }
-            AssertAgainstDatabase(DatabaseNotAtVersionGo);
+            this.AssertAgainstDatabase(this.DatabaseNotAtVersionGo);
         }
 
         private void ApplyVersion1()
         {
-            using (var connection = new SQLiteConnection(connectionstring))
+            using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.Open();
                 try
                 {
                     var query = "CREATE TABLE Team ( TeamId INT PRIMARY KEY, name nvarchar(20));" +
-                                string.Format("INSERT INTO {0} (Version, FileName, DateAppliedUtc) VALUES ('{1}', '{2}', '{3}')", versionTableName, "1", v1, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                                string.Format("INSERT INTO {0} (Version, FileName, DateAppliedUtc) VALUES ('{1}', '{2}', '{3}')", VersionTableName, "1", v1, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                     using(var command = new SQLiteCommand(query, connection)) 
                     {
                         command.ExecuteNonQuery();
@@ -231,44 +231,44 @@ namespace Dirtybase.Tests.Sqlite
         private Errors DatabaseAtVersion1(SQLiteConnection connection)
         {
             var errors = new Errors();
-            errors.AddRange(AssertTable(true, connection, "Team"));
-            errors.AddRange(HasV1Row(connection));
+            errors.AddRange(this.AssertTable(true, connection, "Team"));
+            errors.AddRange(this.HasV1Row(connection));
             return errors;
         }
 
         private Errors DatabaseAtVersion3(SQLiteConnection connection)
         {
             var errors = new Errors();
-            errors.AddRange(AssertTable(false, connection, "Team"));
-            errors.AddRange(AssertTable(true, connection, "Employee"));
-            errors.AddRange(HasV3Rows(connection));
+            errors.AddRange(this.AssertTable(false, connection, "Team"));
+            errors.AddRange(this.AssertTable(true, connection, "Employee"));
+            errors.AddRange(this.HasV3Rows(connection));
             return errors;
         }
 
         private Errors DatabaseAtVersionGo(SQLiteConnection connection)
         {
             var errors = new Errors();
-            errors.AddRange(AssertTable(false, connection, "Team"));
-            errors.AddRange(AssertTable(true, connection, "Employee"));
-            errors.AddRange(HasVersionRow(connection, "go", vGo));
+            errors.AddRange(this.AssertTable(false, connection, "Team"));
+            errors.AddRange(this.AssertTable(true, connection, "Employee"));
+            errors.AddRange(this.HasVersionRow(connection, "go", vGo));
             return errors;
         }
 
         private Errors DatabaseNotAtVersionGo(SQLiteConnection connection)
         {
             var errors = new Errors();
-            errors.AddRange(AssertTable(false, connection, "Team"));
-            errors.AddRange(AssertTable(false, connection, "Employee"));
-            errors.AddRange(DoesNotHaveVersionRow(connection, "1InvalidGo", v1InvalidGo));
+            errors.AddRange(this.AssertTable(false, connection, "Team"));
+            errors.AddRange(this.AssertTable(false, connection, "Employee"));
+            errors.AddRange(this.DoesNotHaveVersionRow(connection, "1InvalidGo", v1InvalidGo));
             return errors;
         }
 
         private IEnumerable<string> HasV3Rows(SQLiteConnection connection)
         {
             var errors = new Errors();
-            errors.AddRange(HasV1Row(connection));
-            errors.AddRange(HasV2Row(connection));
-            errors.AddRange(HasV3Row(connection));
+            errors.AddRange(this.HasV1Row(connection));
+            errors.AddRange(this.HasV2Row(connection));
+            errors.AddRange(this.HasV3Row(connection));
             return errors;
         }
 
@@ -292,22 +292,22 @@ namespace Dirtybase.Tests.Sqlite
 
         private IEnumerable<string> HasV1Row(SQLiteConnection connection)
         {
-            return HasVersionRow(connection, "1", v1);
+            return this.HasVersionRow(connection, "1", v1);
         }
 
         private IEnumerable<string> HasV2Row(SQLiteConnection connection)
         {
-            return HasVersionRow(connection, "2", v2);
+            return this.HasVersionRow(connection, "2", v2);
         }
 
         private IEnumerable<string> HasV3Row(SQLiteConnection connection)
         {
-            return HasVersionRow(connection, "3", v3);
+            return this.HasVersionRow(connection, "3", v3);
         }
 
         private Errors HasVersionRow(SQLiteConnection connection, string version, string fileName)
         {
-            var query = string.Format("SELECT count(Version) FROM {0} where Version = '{1}' AND FileName = '{2}';", versionTableName, version, fileName);
+            var query = string.Format("SELECT count(Version) FROM {0} where Version = '{1}' AND FileName = '{2}';", VersionTableName, version, fileName);
             int rowcount;
             using(var command = new SQLiteCommand(query, connection)) 
             {
@@ -322,7 +322,7 @@ namespace Dirtybase.Tests.Sqlite
 
         private Errors DoesNotHaveVersionRow(SQLiteConnection connection, string version, string fileName)
         {
-            var query = string.Format("SELECT count(Version) FROM {0} where Version = '{1}' AND FileName = '{2}';", versionTableName, version, fileName);
+            var query = string.Format("SELECT count(Version) FROM {0} where Version = '{1}' AND FileName = '{2}';", VersionTableName, version, fileName);
             int rowcount;
             using (var command = new SQLiteCommand(query, connection))
             {
@@ -337,7 +337,7 @@ namespace Dirtybase.Tests.Sqlite
 
         private void CopyFileToScriptFolder(string fileName)
         {
-            CopyFileToScriptFolder(fileName, scriptFolder);
+            this.CopyFileToScriptFolder(fileName, scriptFolder);
         }
 
         private void CopyFileToScriptFolder(string fileName, string folderpath)
