@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.IO;
-using Dirtybase.Tests.SqlImplementations.Helpers;
 using NUnit.Framework;
 
-namespace Dirtybase.Tests.SqlImplementations.Sqlite
+namespace Dirtybase.Tests.SqlImplementations
 {
-    public abstract class SqliteTestBase : DbTestBase<SQLiteConnection>
+    [TestFixture]
+    [Category(TestTypes.Unit)]
+    public class SqliteTests : DbTestBase<SQLiteConnection, SQLiteException>
     {
         protected const string databaseFile = "Dirtybase.db";
         protected override string ConnectionString { get { return "Data Source = " + databaseFile + ";Version=3;"; } }
         protected override string VersionTableName { get { return "DirtybaseVersions"; } }
-        protected override string CreateVerisonTableQuery { get { return "CREATE TABLE " + VersionTableName + "(version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateApplied datetime)"; } }
-        protected override string SelectFromVersionTableQuery { get { return "SELECT name FROM sqlite_master WHERE name ='" + VersionTableName + "';"; } }
+        protected override string CreateVerisonTableQuery { get { return "CREATE TABLE " + this.VersionTableName + "(version nvarchar(20) PRIMARY KEY, FileName nvarchar(256), DateApplied datetime)"; } }
+        protected override string SelectFromVersionTableQuery { get { return "SELECT name FROM sqlite_master WHERE name ='" + this.VersionTableName + "';"; } }
+
+        protected override string InitArguments { get { return "init -db sqlite -cs " + this.ConnectionString; } }
+        protected override string MigrateArgs { get { return "migrate -db sqlite -cs " + this.ConnectionString + " -vf " + scriptFolder; } }
 
         protected override string AssertTableQuery(string tableName)
         {
@@ -20,17 +24,19 @@ namespace Dirtybase.Tests.SqlImplementations.Sqlite
         }
 
         [SetUp]
-        public virtual void SetUp()
+        public override void SetUp()
         {
             this.MakeSqliteDatabase();
+            base.SetUp();
         }
 
         [TearDown]
-        public virtual void TearDown()
+        public override void TearDown()
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
             DeleteSqliteDatabase();
+            base.TearDown();
         }
 
         private void MakeSqliteDatabase()

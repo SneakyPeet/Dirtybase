@@ -4,18 +4,22 @@ using System.Data.Common;
 using System.IO;
 using System.Linq;
 using Dirtybase.Core;
+using Dirtybase.Core.Exceptions;
 using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 
-namespace Dirtybase.Tests.SqlImplementations.Helpers
+namespace Dirtybase.Tests.SqlImplementations
 {
-    public abstract class DbTestBase<TDbConnection> where TDbConnection : DbConnection
+    public abstract class DbTestBase<TDbConnection, TDbException> 
+        where TDbConnection : DbConnection 
+        where TDbException: DbException
     {
         protected abstract string ConnectionString { get; }
         protected abstract string VersionTableName { get; }
         protected abstract string CreateVerisonTableQuery { get; }
         protected abstract string SelectFromVersionTableQuery { get; }
-
+        protected abstract string InitArguments { get; }
+        protected abstract string MigrateArgs { get; }
         protected abstract string AssertTableQuery(string tableName);
 
         protected const string scriptFolder = "testfolder";
@@ -31,6 +35,195 @@ namespace Dirtybase.Tests.SqlImplementations.Helpers
         protected const string v1InvalidGo = "v1Invalidgo_TestGoStatements.sql";
 
         protected DirtybaseApi api = new DirtybaseApi(new TestNotifier());
+
+        [SetUp]
+        public virtual void SetUp()
+        {
+            this.CreateScriptsFolder();
+        }
+
+        [SetUp]
+        public virtual void TearDown()
+        {
+            DeleteScriptsFolder();
+        }
+
+        #region Init Tests
+
+        [Test]
+        public void InitShouldAddDirtyBaseVersionTable()
+        {
+            this.api.Do(this.InitArguments.Split(' '));
+            this.AssertAgainstDatabase(this.DirtybaseVersionTableExists);
+        }
+
+        [Test]
+        public void InitOnExistingDirtyBaseSqliteDoNothing()
+        {
+            this.CreateVersionTable();
+            this.api.Do(this.InitArguments.Split(' '));
+        }
+
+        [Test]
+        [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Database Does Not Exist")]
+        public void IfDatabaseDoesNotExistOnInitThrowException()
+        {
+            this.TearDown();
+            this.api.Do(this.InitArguments.Split(' '));
+        }
+
+        #endregion
+
+        #region Migration Tests
+
+        [Test]
+        [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Database Does Not Exist")]
+        public void IfDatabaseDoesNotExistOnMigrateThrowException()
+        {
+            this.TearDown();
+            this.api.Do(this.MigrateArgs.Split(' '));
+        }
+
+        [Test]
+        [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Dirtybase Not Initialized. Run init Command")]
+        public void IfVersionTableDoesNotExistThrowException()
+        {
+            this.api.Do(this.MigrateArgs.Split(' '));
+        }
+
+        [Test]
+        public void NewVersionShouldUpdateDatabaseAndVersionTable()
+        {
+            this.CopyFileToScriptFolder(v1);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersion1);
+        }
+
+        [Test]
+        public void MultipleNewVersionShouldUpdateDatabaseAndVersionTableInOrder()
+        {
+            this.CopyFileToScriptFolder(v1);
+            this.CopyFileToScriptFolder(v2);
+            this.CopyFileToScriptFolder(v3);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersion3);
+        }
+
+        [Test]
+        [ExpectedException(typeof(VersionFileNameFormatException), ExpectedMessage = "v_BadName.sql does not conform to the file naming convention")]
+        public void FileWithBadVersionNameShouldThrowException()
+        {
+            this.CopyFileToScriptFolder(badfilename);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+        }
+
+        [Test]
+        public void NewVersionsOverExistingVersionShouldApplyNewVersionsOnly()
+        {
+            //given
+            this.CopyFileToScriptFolder(v1);
+            this.CopyFileToScriptFolder(v2);
+            this.CopyFileToScriptFolder(v3);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.ApplyVersion1();
+            this.AssertAgainstDatabase(this.DatabaseAtVersion1);
+            //when - then
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersion3);
+        }
+
+        [Test]
+        public void AllFilesInSubFoldersShouldBeApplied()
+        {
+            this.CopyFileToScriptFolder(v1);
+            this.CopyFileToScriptFolder(v2, scriptFolder + "\\fooFolder");
+            this.CopyFileToScriptFolder(v3);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersion3);
+        }
+
+        [Test]
+        [ExpectedException(typeof(VersionFileMissingException), ExpectedMessage = "The version file 'v1_CreateTeamTable.sql' cannot be found in script directory. Inconsistent versioning")]
+        public void VersionRowInDbAndNotInFolderShouldThrowException()
+        {
+            //given
+            this.CopyFileToScriptFolder(v2);
+            this.CopyFileToScriptFolder(v3);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.ApplyVersion1();
+            this.AssertAgainstDatabase(this.DatabaseAtVersion1);
+            //when - then
+            this.api.Do(this.MigrateArgs.Split(' '));
+        }
+
+        [Test]
+        public void FilesShouldBeAppliedInOrder()
+        {
+            //Will Fail If Not Applied In Order
+            this.CopyFileToScriptFolder(v22);
+            this.CopyFileToScriptFolder(v113);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+        }
+
+        [Test]
+        public void FunnyVersionNamedFilesShouldBeAppliedInOrder()
+        {
+            //Will Fail If Not Applied In Order
+            this.CopyFileToScriptFolder(v115);
+            this.CopyFileToScriptFolder(v1115);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+        }
+
+        [Test]
+        public void FilesWithGoSeperatorShouldRun()
+        {
+            this.CopyFileToScriptFolder(vGo);
+            this.api.Do(this.InitArguments.Split(' '));
+            this.api.Do(this.MigrateArgs.Split(' '));
+            this.AssertAgainstDatabase(this.DatabaseAtVersionGo);
+        }
+
+        [Test]
+        public void InvalidGoSeperatedFileShouldNotApplyAnyStatements()
+        {
+            this.CopyFileToScriptFolder(v1InvalidGo);
+            this.api.Do(this.InitArguments.Split(' '));
+            try
+            {
+                this.api.Do(this.MigrateArgs.Split(' '));
+            }
+            catch (TDbException e)
+            {
+                Assert.AreEqual("SQL logic error or missing database\r\nno such table: Teamfd", e.Message, "Not Expected Exception");
+            }
+
+            this.AssertAgainstDatabase(this.DatabaseNotAtVersionGo);
+        }
+
+        [Test]
+        public void OnErrorShouldNotApplySubsequintFiles()
+        {
+            this.CopyFileToScriptFolder(v1InvalidGo);
+            this.CopyFileToScriptFolder(v22);
+            this.api.Do(this.InitArguments.Split(' '));
+            try
+            {
+                this.api.Do(this.MigrateArgs.Split(' '));
+            }
+            catch (TDbException e)
+            {
+                Assert.AreEqual("SQL logic error or missing database\r\nno such table: Teamfd", e.Message, "Not Expected Exception");
+            }
+            this.AssertAgainstDatabase(this.DatabaseNotAtVersionGo);
+        }
+
+        #endregion 
 
         protected void CreateVersionTable()
         {
