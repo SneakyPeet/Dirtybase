@@ -53,8 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlImplementations\DbTestBase.cs" />
-    <Compile Include="SqlImplementations\SqliteTestBase.cs" />
+    <Compile Include="SqlTests\SqlTests.cs" />
+    <Compile Include="SqlTests\DbTestBase.cs" />
+    <Compile Include="SqlTests\SqliteTestBase.cs" />
     <Compile Include="TestNotifier.cs" />
     <Compile Include="TestTypes.cs" />
     <Compile Include="Unit\CommandlineParsingTests.cs" />

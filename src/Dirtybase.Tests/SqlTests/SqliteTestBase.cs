@@ -3,7 +3,7 @@ using System.Data.SQLite;
 using System.IO;
 using NUnit.Framework;
 
-namespace Dirtybase.Tests.SqlImplementations
+namespace Dirtybase.Tests.SqlTests
 {
     [TestFixture]
     [Category(TestTypes.Unit)]

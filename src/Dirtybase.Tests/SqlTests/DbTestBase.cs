@@ -8,7 +8,7 @@ using Dirtybase.Core.Exceptions;
 using Dirtybase.Core.Options.Validators;
 using NUnit.Framework;
 
-namespace Dirtybase.Tests.SqlImplementations
+namespace Dirtybase.Tests.SqlTests
 {
     public abstract class DbTestBase<TDbConnection, TDbException> 
         where TDbConnection : DbConnection 
