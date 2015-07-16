@@ -2,13 +2,13 @@ using Dirtybase.Core.Commands;
 using Dirtybase.Core.Options;
 using Dirtybase.Core.VersionComparison;
 
-namespace Dirtybase.Core.Implementations.Sql
+namespace Dirtybase.Core.Implementations.Sql.Sqlite
 {
-    class SqlInitCommand : IDirtyCommand
+    internal class SqliteMigrateCommand : SqliteCommandBase, IDirtyCommand
     {
         public void Execute(DirtyOptions options, IVersionComparer versionComparer, INotifier notifier)
         {
-            throw new System.NotImplementedException();
+            this.Migrate(options, versionComparer);
         }
     }
 }

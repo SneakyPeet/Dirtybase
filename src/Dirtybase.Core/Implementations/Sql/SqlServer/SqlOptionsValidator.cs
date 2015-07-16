@@ -2,7 +2,7 @@ using System.Data.SqlClient;
 using Dirtybase.Core.Options;
 using Dirtybase.Core.Options.Validators;
 
-namespace Dirtybase.Core.Implementations.Sql
+namespace Dirtybase.Core.Implementations.Sql.SqlServer
 {
     class SqlOptionsValidator : ConnectionStringValidator, IOptionsValidator
     {

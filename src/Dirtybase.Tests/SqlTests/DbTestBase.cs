@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SQLite;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using Dirtybase.Core;
@@ -58,7 +60,7 @@ namespace Dirtybase.Tests.SqlTests
         }
 
         [Test]
-        public void InitOnExistingDirtyBaseSqliteDoNothing()
+        public void InitOnExistingDirtyBaseDoNothing()
         {
             this.CreateVersionTable();
             this.api.Do(this.InitArguments.Split(' '));
@@ -66,7 +68,7 @@ namespace Dirtybase.Tests.SqlTests
 
         [Test]
         [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Database Does Not Exist")]
-        public void IfDatabaseDoesNotExistOnInitThrowException()
+        public virtual void IfDatabaseDoesNotExistOnInitThrowException()
         {
             this.TearDown();
             this.api.Do(this.InitArguments.Split(' '));
@@ -78,7 +80,7 @@ namespace Dirtybase.Tests.SqlTests
 
         [Test]
         [ExpectedException(typeof(DirtybaseException), ExpectedMessage = "Database Does Not Exist")]
-        public void IfDatabaseDoesNotExistOnMigrateThrowException()
+        public virtual void IfDatabaseDoesNotExistOnMigrateThrowException()
         {
             this.TearDown();
             this.api.Do(this.MigrateArgs.Split(' '));
@@ -198,11 +200,15 @@ namespace Dirtybase.Tests.SqlTests
             {
                 this.api.Do(this.MigrateArgs.Split(' '));
             }
-            catch (TDbException e)
+            catch (SQLiteException e)
             {
                 Assert.AreEqual("SQL logic error or missing database\r\nno such table: Teamfd", e.Message, "Not Expected Exception");
             }
-
+            catch (SqlException e)
+            {
+                Assert.AreEqual("Cannot drop the table 'Teamfd', because it does not exist or you do not have permission.", e.Message, "Not Expected Exception");
+            }
+            
             this.AssertAgainstDatabase(this.DatabaseNotAtVersionGo);
         }
 
@@ -216,9 +222,13 @@ namespace Dirtybase.Tests.SqlTests
             {
                 this.api.Do(this.MigrateArgs.Split(' '));
             }
-            catch (TDbException e)
+            catch (SQLiteException e)
             {
                 Assert.AreEqual("SQL logic error or missing database\r\nno such table: Teamfd", e.Message, "Not Expected Exception");
+            }
+            catch (SqlException e)
+            {
+                Assert.AreEqual("Cannot drop the table 'Teamfd', because it does not exist or you do not have permission.", e.Message, "Not Expected Exception");
             }
             this.AssertAgainstDatabase(this.DatabaseNotAtVersionGo);
         }
@@ -278,7 +288,7 @@ namespace Dirtybase.Tests.SqlTests
             }
         }
 
-        private TDbConnection MakeConnection()
+        protected TDbConnection MakeConnection()
         {
             return Activator.CreateInstance(typeof(TDbConnection), new object[] { this.ConnectionString }) as TDbConnection;
         }
